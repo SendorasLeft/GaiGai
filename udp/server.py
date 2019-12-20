@@ -4,7 +4,7 @@ import socket
 
 #The following code comes from markjay4k as referenced below
 
-chunk=512
+chunk=256
 RATE=16000
 
 p=pyaudio.PyAudio()
@@ -24,7 +24,7 @@ server.settimeout(0.1)
 
 while True:            #Used to continuously stream audio
     data=np.fromstring(stream.read(chunk,exception_on_overflow = False),dtype=np.int16)
-    server.sendto(data, ('localhost', 37020))
+    server.sendto(data, ('127.0.0.1', 37020))
     
 #closes streams
 stream.stop_stream()

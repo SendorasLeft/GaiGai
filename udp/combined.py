@@ -7,7 +7,7 @@ from threading import Thread
 
 
 chunk = 256
-RCV_MULTIPLIER = 4
+RCV_MULTIPLIER = 4 # 2 works well on mac, 4 works better on pi
 RATE = 16000
 timeout = 0.01
 #IP = '127.0.0.1'
@@ -30,7 +30,7 @@ print ("Your IP address is: ", socket.gethostbyname(socket.gethostname()))
 client.setblocking(0)
 
 def receiver_thread():
-    while True:            #Used to continuously stream audio
+    while True: # need to set flag for poweron/off
         try:
             ready = select.select([client], [], [], timeout) # check if any data in socket
             if (ready[0]):
@@ -40,9 +40,9 @@ def receiver_thread():
             pass
 
 def broadcaster_thread():
-    while True:            #Used to continuously stream audio
+    while True: # need to set flag for poweron/poweroff
         data=np.fromstring(stream.read(chunk,exception_on_overflow = False),dtype=np.int16)
-        server.sendto(data, ('localhost', 37020))
+        server.sendto(data, ('127.0.0.1', 37020))
 
 sending_thread = Thread(target=broadcaster_thread) #args=(arg,)
 receiving_thread = Thread(target=receiver_thread) #args=(arg,)
