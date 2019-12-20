@@ -7,7 +7,7 @@ from threading import Thread
 
 
 chunk = 256
-RCV_MULTIPLIER = 1
+RCV_MULTIPLIER = 4
 RATE = 16000
 timeout = 0.01
 #IP = '127.0.0.1'
