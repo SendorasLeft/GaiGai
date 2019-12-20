@@ -42,7 +42,7 @@ def receiver_thread():
 def broadcaster_thread():
     while True: # need to set flag for poweron/poweroff
         data=np.fromstring(stream.read(chunk,exception_on_overflow = False),dtype=np.int16)
-        server.sendto(data, ('127.0.0.1', 37020))
+        server.sendto(data, ('<broadcast>', 37020))
 
 sending_thread = Thread(target=broadcaster_thread) #args=(arg,)
 receiving_thread = Thread(target=receiver_thread) #args=(arg,)
