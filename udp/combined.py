@@ -6,7 +6,7 @@ import threading
 from threading import Thread
 
 
-chunk = 512
+chunk = 256
 RCV_MULTIPLIER = 2
 RATE = 16000
 timeout = 0.01
