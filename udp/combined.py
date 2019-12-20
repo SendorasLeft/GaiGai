@@ -31,7 +31,6 @@ client.setblocking(0)
 
 def receiver_thread():
     while True:            #Used to continuously stream audio
-        print("hello")
         try:
             ready = select.select([client], [], [], timeout) # check if any data in socket
             if (ready[0]):
