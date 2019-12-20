@@ -25,14 +25,10 @@ stream=p.open(format = pyaudio.paInt16,rate=RATE,channels=1, input_device_index 
 player=p.open(format = pyaudio.paInt16,rate=RATE,channels=1, output=True, frames_per_buffer=chunk)
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-#server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-# Enable broadcasting mode
-#server.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 server.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
 server.settimeout(0.1)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) # UDP
-#client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 client.bind(server_address)
 group = socket.inet_aton(multicast_group)
 mreq = struct.pack('4sL', group, socket.INADDR_ANY)
