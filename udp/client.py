@@ -35,6 +35,6 @@ while True:            #Used to continuously stream audio
         pass
     
 #closes streams
-stream.stop_stream()
-stream.close()
+#stream.stop_stream()
+#stream.close()
 p.terminate
