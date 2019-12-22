@@ -1,7 +1,6 @@
 from RPi import GPIO
 from time import sleep
-from alsaaudio import Mixer
-from alsaaudio import mixers
+import alsaaudio
 
 
 def setup(clk, dt):
@@ -11,17 +10,27 @@ def setup(clk, dt):
 
 
 def increaseVolume(mixer):
-    print("range is ", mixer.getrange())
-    vol = mixer.getvolume()
+    vol = mixer.getvolume()[0]
+    if vol >= 95: # can't exceed 95 because it will be overly-loud
+        return
+    if vol + 5 > 95:
+        mixer.setvolume(95)
+        print("volume set to 95")
+        return
     mixer.setvolume(vol + 5)
-    print("volume set to ", vol + 5)
+    print("volume set to", vol + 5)
 
 
 def decreaseVolume(mixer):
-    print("range is ", mixer.getrange())
-    vol = mixer.getvolume()
+    vol = mixer.getvolume()[0]
+    if vol <= 0:
+        return
+    if vol - 5 < 0:
+        mixer.setvolume(0)
+        print("volume set to 0")
+        return
     mixer.setvolume(vol - 5)
-    print("volume set to ", vol - 5)
+    print("volume set to", vol - 5)
 
 
 def controlVolume(clkState, dtState, clkLastState, mixer):
@@ -49,10 +58,11 @@ def endProgram():
 def main():
     clk = 17
     dt = 18
-    mixer = Mixer(mixers[0])
+    print(alsaaudio.mixers()[0])
+    mixer = alsaaudio.Mixer(alsaaudio.mixers()[0])
     setup(clk, dt)
     try:
-        controlVolume(clk, dt, mixer)
+        loop(clk, dt, mixer)
     except KeyboardInterrupt:
         print("keyboard interrupt detected")
         endProgram()
