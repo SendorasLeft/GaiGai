@@ -78,7 +78,6 @@ def endProgram():
 def main():
     clk = 17
     dt = 18
-    print(alsaaudio.mixers()[0])
     mixer = alsaaudio.Mixer(alsaaudio.mixers()[0])
     setup(clk, dt)
     try:
