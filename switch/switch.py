@@ -12,12 +12,12 @@ def loop(button):
     while True:
         buttonState = GPIO.input(button)
         if buttonState != lastState:
-            if buttonState is True:
+            if buttonState == True:
                 print("Button Pressed...")
             else:
                 print("Button not pressed...")
         lastState = buttonState
-        sleep(0.5)
+        sleep(0.2)
 
 
 def endProgram():
@@ -25,7 +25,7 @@ def endProgram():
 
 
 def main():
-    button = 26
+    button = 19
     setup(button)
     try:
         loop(button)
