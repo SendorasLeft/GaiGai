@@ -8,16 +8,23 @@ class Button:
         GPIO.setup(pinNum, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         self.state = GPIO.input(pinNum)
     
+    def stateChanged(self):
+        if GPIO.input(self.pinNum) != self.state:
+            return True
+        else:
+            return False
+
     def isPressed(self):
-        newState = GPIO.input(pinNum)
+        newState = GPIO.input(self.pinNum)
         if newState != self.state:
             self.state = newState
-            if newState = True:
-                return True
+            if newState == True:
+                return 1
             else:
-                return False
+                return 0
+        return -1
 
-    def close():
+    def close(self):
         GPIO.cleanup()
     
     

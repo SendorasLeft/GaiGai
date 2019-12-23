@@ -1,15 +1,18 @@
+import Button
 from time import sleep
 
 def loop(button):
     while True:
-        if button.isPressed():
+        isPressed = button.isPressed()
+        if isPressed == 1:
             print("Button Pressed")
-        else:
+        elif isPressed == 0:
             print("Button not pressed")
+        sleep(0.2)
 
 def main():
     pinNum = 19
-    button = Button(pinNum)
+    button = Button.Button(pinNum)
     try:
         loop(button)
     except KeyboardInterrupt:
@@ -18,3 +21,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
