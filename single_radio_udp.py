@@ -33,7 +33,7 @@ not_shutdown = True
 def IO_setup(rate, frames_per_buffer, channels=1, type_format=pyaudio.paInt16):
     p = pyaudio.PyAudio()
     stream = p.open(format=type_format,rate=rate,channels=channels, input_device_index=2, input=True, frames_per_buffer=frames_per_buffer)
-    player = p.open(format=type_format,rate=rate,channels=channels, output=True, frames_per_buffer=frames_per_buffer)
+    player = p.open(format=type_format,rate=44000,channels=channels, output=True, frames_per_buffer=frames_per_buffer)
     return p, stream, player
 
 # initializes single multicast server port for streaming all mic sounds
