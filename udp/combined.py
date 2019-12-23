@@ -107,7 +107,7 @@ def main():
     # nested function for handling signal interrupts. closes streams and sockets, then exits all threads gracefully
     def SIGINT_handler(*args):
         global not_shutdown
-        print("handling...")
+        print("handling signal interrupt...")
         not_shutdown = False
         sending_thread.join()
         receiving_thread.join()
