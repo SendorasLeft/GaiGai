@@ -92,7 +92,10 @@ def update_radio_membership(radio_idx, channel):
         radio_channels[channel_prefs[radio_idx]].discard(radio_idx)
         radio_channels[channel].add(radio_idx)
         if channel != -1 and channel_prefs[radio_idx] == -1:
-            print("[CONNECT] Update: Radio", radio_idx, "is now connected to the central server.")
+            print("[CONNECT] Update: Radio"
+                  ,radio_idx
+                  ,"is now connected to the central server on channel"
+                  ,channel)
         elif channel == -1 and channel_prefs[radio_idx] != -1:
             print("[DISCONNECT] Update: Radio", radio_idx, "has disconnected.")
         elif channel_prefs[radio_idx] != channel:
@@ -230,9 +233,9 @@ def main():
 
         sys.exit()
 
-
     signal.signal(signal.SIGINT, SIGINT_handler)
-    # sending_thread.start()
+
+    # start spawning all the core threads
     channel_prefs_receiving_thread.start()
     receiving_thread.start()
 
