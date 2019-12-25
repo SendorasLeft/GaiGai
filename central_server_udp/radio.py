@@ -16,6 +16,8 @@ RATE = 16000 # to be adjusted according to available soundcard
 TIMEOUT = 0.01 # receiver select-check timeout
 TTL = struct.pack('b', 1) # udp datagram time-to-live
 
+#PREFS_TTL = struct.pack('b', 0.3)
+
 MULTICAST_IP = '224.3.29.71'
 SENDER_PORT = 10100
 RECEIVER_PORT = 10200
@@ -78,9 +80,9 @@ def server_thread(server_socket, stream, chunk_size, server_multicast_group):
 def receiver_thread(receiver_socket, player, timeout, chunk_size, rcv_multiplier):
     global not_shutdown
     while not_shutdown: # need to set flag for poweron/off
-        ready = select.select([receiver_socket], [], [], timeout) # check if any data present in subscribed sockets
+        ready, _, _ = select.select([receiver_socket], [], [], timeout) # check if any data present in subscribed sockets
         try:
-            if (ready[0]): # if socket has data
+            if (receiver_socket in ready): # if socket has data
                 rcvdata, addr = receiver_socket.recvfrom(chunk_size * rcv_multiplier)
                 #print(rcvdata)
                 player.write(rcvdata)
