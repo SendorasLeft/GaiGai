@@ -43,14 +43,14 @@ def decreaseVolume(mixer):
     mixer.setvolume(vol - getVolumeChange(vol))
     print("volume set to", mixer.getvolume()[0])
 
-def loop(knob):
+def loop(knob, mixer):
     while True:
         isRotatedCW = knob.isRotatedCW()
         if isRotatedCW == 1:
             increaseVolume(mixer)
         elif isRotatedCW == 0:
             decreaseVolume(mixer)
-        sleep(0.1)
+        sleep(0.01)
 
 def main():
     clk = 17
