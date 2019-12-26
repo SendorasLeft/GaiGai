@@ -10,7 +10,7 @@ import time
 
 # general UDP segment parameters
 CHUNK = 64
-RCV_MULTIPLIER = 2  # 2 works well on mac, 4 works better on pi
+RCV_MULTIPLIER = 1  # 2 works well on mac, 4 works better on pi
 RATE = 16000  # to be adjusted according to available sound-card
 TIMEOUT = 0.01  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
@@ -18,9 +18,9 @@ TTL = struct.pack('b', 1)  # udp datagram time-to-live
 MULTICAST_IP = '224.3.29.71'
 SERVER_PORT = 10000
 
-RADIO_MIC_PORTS = [10100, 10101, 10102, 10103, 10104, 10105]
-CLIENT_PORTS = [10200, 10201, 10202, 10203, 10204, 10205]
-CHANNEL_PREF_PORTS = [10300, 10301, 10302, 10303, 10304, 10305]
+RADIO_MIC_PORTS = [10100, 10101, 10102, 10103]
+CLIENT_PORTS = [10200, 10201, 10202, 10203]
+CHANNEL_PREF_PORTS = [10300, 10301, 10302, 10303]
 
 # the -1 channel denotes disconnected radios
 radio_channels = {-1: {radio_idx for radio_idx in range(len(RADIO_MIC_PORTS))}
