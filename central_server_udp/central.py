@@ -181,7 +181,7 @@ def compose_radiostream(rcvdata_map, channel_pref, radio_idx, radio_channels):
         return None
 
 
-def channel_pref_thread(subscribed_sockets, timeout=0.3, sleep=0.1):
+def channel_pref_thread(subscribed_sockets, timeout=0.3, sleep=0.3):
     """Receives channel membership preference from all radios, then switches their membership accordingly. This
     thread is also responsible for updating connection status based on UDP packet inactivity (ie. when a radio
     fails to send their channel preference within a time period defined by timeout and sleep. Channel preference data
