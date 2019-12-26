@@ -10,15 +10,15 @@ import time
 
 # general UDP segment parameters
 CHUNK = 64
-RCV_MULTIPLIER = 2  # 2 works well on mac, 4 works better on pi
+RCV_MULTIPLIER = 1  # 2 works well on mac, 4 works better on pi
 RATE = 16000  # to be adjusted according to available sound-card
 TIMEOUT = 0.01  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
 
 MULTICAST_IP = '224.3.29.71'
-SENDER_PORT = 10101
-RECEIVER_PORT = 10201
-CHANNEL_PREF_PORT = 10301
+SENDER_PORT = 10100
+RECEIVER_PORT = 10200
+CHANNEL_PREF_PORT = 10300
 
 channel_preference = 1
 
