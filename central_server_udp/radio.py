@@ -112,10 +112,13 @@ def server_thread(server_socket, stream, stream_lock, chunk_size, server_multica
     """
     global not_shutdown
     while not_shutdown:  # need to set flag for power-on/power-off
-        data_string = read_from_stream(stream, stream_lock, chunk_size)
-        # data = np.fromstring(data_string, dtype=np.int16)
-        # print(data)
-        server_socket.sendto(data_string, server_multicast_group)
+        try:
+            data_string = read_from_stream(stream, stream_lock, chunk_size)
+            # data = np.fromstring(data_string, dtype=np.int16)
+            # print(data)
+            server_socket.sendto(data_string, server_multicast_group)
+        except socket.timeout:
+            pass
 
 
 def read_from_stream(stream, lock, chunk_size):
