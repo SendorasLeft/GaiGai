@@ -18,16 +18,16 @@ TTL = struct.pack('b', 1)  # udp datagram time-to-live
 MULTICAST_IP = '224.3.29.71'
 SERVER_PORT = 10000
 
-RADIO_MIC_PORTS = [10100, 10101, 10102, 10103, 10104, 10105, 10106]
-CLIENT_PORTS = [10200, 10201, 10202, 10203, 10204, 10205, 10206]
-CHANNEL_PREF_PORTS = [10300, 10301, 10302, 10303, 10304, 10305, 10306]
+RADIO_MIC_PORTS = [10100, 10101, 10102, 10103, 10104, 10105]
+CLIENT_PORTS = [10200, 10201, 10202, 10203, 10204, 10205]
+CHANNEL_PREF_PORTS = [10300, 10301, 10302, 10303, 10304, 10305]
 
 # the -1 channel denotes disconnected radios
 radio_channels = {-1: {radio_idx for radio_idx in range(len(RADIO_MIC_PORTS))}
     , 0: set()
     , 1: set()
     , 2: set()}
-channel_prefs = np.array([-1, -1, -1, -1, -1, -1, -1])
+channel_prefs = np.array([-1, -1, -1, -1, -1, -1])
 
 # radio
 server_multicast_group = (MULTICAST_IP, SERVER_PORT)
@@ -181,7 +181,7 @@ def compose_radiostream(rcvdata_map, channel_pref, radio_idx, radio_channels):
         return None
 
 
-def channel_pref_thread(subscribed_sockets, timeout=0.3, sleep=0.1):
+def channel_pref_thread(subscribed_sockets, timeout=0.3, sleep=0.5):
     """Receives channel membership preference from all radios, then switches their membership accordingly. This
     thread is also responsible for updating connection status based on UDP packet inactivity (ie. when a radio
     fails to send their channel preference within a time period defined by timeout and sleep. Channel preference data
