@@ -18,16 +18,16 @@ TTL = struct.pack('b', 1)  # udp datagram time-to-live
 MULTICAST_IP = '224.3.29.71'
 SERVER_PORT = 10000
 
-RADIO_MIC_PORTS = [10100, 10101, 10102, 10103]
-CLIENT_PORTS = [10200, 10201, 10202, 10203]
-CHANNEL_PREF_PORTS = [10300, 10301, 10302, 10303]
+RADIO_MIC_PORTS = [10100, 10101] #10102, 10103]
+CLIENT_PORTS = [10200, 10201] #10202, 10203]
+CHANNEL_PREF_PORTS = [10300, 10301] #10302, 10303]
 
 CHANNEL_PORTS = [10400, 10401, 10402]
 
 channel_prefs = np.array([-1, -1, -1, -1, -1, -1])
 
 mic_data_buffer = [deque()] * len(RADIO_MIC_PORTS)
-MAX_BUF_LEN = 30
+MAX_BUF_LEN = 10
 
 # the -1 channel denotes disconnected radios
 radio_channels = {-1: {radio_idx for radio_idx in range(len(RADIO_MIC_PORTS))}
@@ -172,9 +172,12 @@ def channel_thread(channel, server_socket, mcast_group):
     global not_shutdown, radio_channels
 
     while not_shutdown:
-        send_data = compose_channel_stream(channel)
-        if send_data is not None:
-            server_socket.sendto(send_data.tostring(), mcast_group)
+        try:
+            send_data = compose_channel_stream(channel)
+            if send_data is not None:
+                server_socket.sendto(send_data.tostring(), mcast_group)
+        except socket.timeout:
+            pass
 
 
 def compose_channel_stream(channel):
