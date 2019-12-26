@@ -3,17 +3,9 @@
 # Install command for alsaaudio:
 # sudo -H pip3 install pyalsaaudio
 
-
-from RPi import GPIO
+from Knob import Knob
 from time import sleep
 import alsaaudio
-
-
-def setup(clk, dt):
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
 
 def getVolumeChange(vol):
     if vol >= 94:
@@ -40,7 +32,6 @@ def increaseVolume(mixer):
     mixer.setvolume(vol + getVolumeChange(vol))
     print("volume set to", mixer.getvolume()[0])
 
-
 def decreaseVolume(mixer):
     vol = mixer.getvolume()[0]
     if vol <= 25: # can't exceed 25 because it will be too soft
@@ -52,40 +43,25 @@ def decreaseVolume(mixer):
     mixer.setvolume(vol - getVolumeChange(vol))
     print("volume set to", mixer.getvolume()[0])
 
-
-def controlVolume(clkState, dtState, clkLastState, mixer):
-    if clkState != clkLastState:
-        if dtState != clkState:
-            increaseVolume(mixer)
-        else:
-            decreaseVolume(mixer)
-        sleep(0.1)
-
-
-def loop(clk, dt, mixer):
-    clkLastState = GPIO.input(clk)
+def loop(knob, mixer):
     while True:
-        clkState = GPIO.input(clk)
-        dtState = GPIO.input(dt)
-        controlVolume(clkState, dtState, clkLastState, mixer)
-        clkLastState = clkState
-
-
-def endProgram():
-    GPIO.cleanup()
-
+        isRotatedCW = knob.isRotatedCW()
+        if isRotatedCW == 1:
+            increaseVolume(mixer)
+        elif isRotatedCW == 0:
+            decreaseVolume(mixer)
+        sleep(0.01)
 
 def main():
-    clk = 17 # 23 # 17
-    dt =  18 # 24 # 18 
+    clk = 17
+    dt = 18
+    knob = Knob(clk, dt)
     mixer = alsaaudio.Mixer(alsaaudio.mixers()[0])
-    setup(clk, dt)
     try:
-        loop(clk, dt, mixer)
+        loop(knob, mixer)
     except KeyboardInterrupt:
-        print("keyboard interrupt detected")
-        endProgram()
-
+        print("keyboard interrupt detected, program closing...")
+        knob.close()
 
 if __name__ == '__main__':
     main()
