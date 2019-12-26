@@ -9,7 +9,7 @@ from threading import Thread
 from collections import deque
 
 # general UDP segment parameters
-CHUNK = 64
+CHUNK = 512
 RCV_MULTIPLIER = 2  # 2 works well on mac, 4 works better on pi
 RATE = 16000  # to be adjusted according to available sound-card
 TIMEOUT = 0.01  # receiver select-check timeout
