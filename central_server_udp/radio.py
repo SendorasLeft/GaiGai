@@ -16,11 +16,13 @@ TIMEOUT = 0.01  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
 
 MULTICAST_IP = '224.3.29.71'
-SENDER_PORT = 10100
-RECEIVER_PORT = 10200
-CHANNEL_PREF_PORT = 10300
+SENDER_PORT = 10101
+RECEIVER_PORT = 10400 # TODO: change this after testing
+CHANNEL_PREF_PORT = 10301
 
-channel_preference = 1
+CHANNEL_PORTS = [10400, 10401, 10402]
+
+channel_preference = 0
 
 # sender
 server_multicast_group = (MULTICAST_IP, SENDER_PORT)
@@ -98,6 +100,33 @@ def subscription_multicast_setup(multicast_ip, port):
     client.setblocking(0)
 
     return client
+
+
+def multi_subscription_multicast_setup(multicast_ip, subscription_ports):
+    """Returns a list of UDP multicast sockets initialized based on a single IP and multiple subscription ports.
+
+    :param multicast_ip: multicast IP address as string
+    :param subscription_ports: list of port numbers as integers
+    :return: list of non-blocking multicast sockets corresponding to the supplied IP and ports
+    """
+    subscribed_sockets = []
+
+    for port in subscription_ports:
+        client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)  # UDP
+        client.bind(('', port))
+        group = socket.inet_aton(multicast_ip)
+        mreq = struct.pack('4sL', group, socket.INADDR_ANY)
+        client.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+
+        print("Subscription Update: Subscribed to socket multicast IP"
+              , socket.gethostbyname(socket.gethostname())
+              , "on port"
+              , port)
+
+        client.setblocking(0)
+        subscribed_sockets.append(client)
+
+    return subscribed_sockets
 
 
 def server_thread(server_socket, stream, stream_lock, chunk_size, server_multicast_group):
@@ -192,14 +221,14 @@ def channel_preference_thread(channel_socket, channel_multicast_group):
 def main():
     p, stream, player, stream_lock, player_lock = IO_setup(rate=RATE, frames_per_buffer=CHUNK)
     server_socket = server_multicast_setup(ttl=TTL, timeout=TIMEOUT)
-    channel_socket = server_multicast_setup(ttl=TTL, timeout=TIMEOUT)
+    channelpref_socket = server_multicast_setup(ttl=TTL, timeout=TIMEOUT)
     receiver_socket = subscription_multicast_setup(multicast_ip=MULTICAST_IP, port=RECEIVER_PORT)
 
     sending_thread = Thread(target=server_thread
                             , args=(server_socket, stream, stream_lock, CHUNK, server_multicast_group,))
 
     channelpref_thread = Thread(target=channel_preference_thread
-                                , args=(channel_socket, channel_multicast_group,))
+                                , args=(channelpref_socket, channel_multicast_group,))
 
     receiving_thread = Thread(target=receiver_thread
                               , args=(receiver_socket, player, player_lock, TIMEOUT, CHUNK, RCV_MULTIPLIER,))
@@ -220,7 +249,7 @@ def main():
 
         server_socket.close()
         receiver_socket.close()
-        channel_socket.close()
+        channelpref_socket.close()
 
         sys.exit()
 
