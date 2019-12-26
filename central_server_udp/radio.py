@@ -16,11 +16,11 @@ TIMEOUT = 0.01  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
 
 MULTICAST_IP = '224.3.29.71'
-SENDER_PORT = 10100
-RECEIVER_PORT = 10200
-CHANNEL_PREF_PORT = 10300
+SENDER_PORT = 10101
+RECEIVER_PORT = 10201
+CHANNEL_PREF_PORT = 10301
 
-channel_preference = 1
+channel_preference = 0
 
 # sender
 server_multicast_group = (MULTICAST_IP, SENDER_PORT)

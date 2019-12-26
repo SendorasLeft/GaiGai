@@ -140,6 +140,44 @@ def receiver_thread(subscribed_sockets, server_socket, timeout, chunk_size, rcv_
         # respond to the connected radios
         server_response(server_socket, channel_prefs, radio_channels, rcvdata_map, CLIENT_PORTS)
 
+def receiver2_thread(channel, subscribed_sockets, server_socket, timeout, chunk_size, rcv_multiplier):
+    """Main server thread that continually receives incoming microphone data from all client radio ports, then
+    responds back with the correct stream depending on their channel membership.
+
+    :param subscribed_sockets: list of sockets to receive microphone data from
+    :param server_socket: server socket used to send response
+    :param timeout: time-out for select checking on all subscribed_sockets for received data
+    :param chunk_size: bytes of data to receive
+    :param rcv_multiplier: multiplier for chunk_size. when this is 1, then bytes received is equal to chunk_size
+    """
+    global not_shutdown, channel_prefs, radio_channels
+    while not_shutdown:  # need to set flag for poweron/off
+
+        data = []
+        channel_sockets = []
+        member_idxes = []
+
+        if (len(radio_channels[channel]) > 0):
+            for radio_idx in radio_channels[channel]:
+                channel_sockets.append(subscribed_sockets[radio_idx])
+                member_idxes.append(radio_idx)
+
+            ready_sockets, _, _ = select.select(channel_sockets, [], [], timeout)
+            
+            for i in range(len(channel_sockets)):
+                try:
+                    if (channel_sockets[i] in ready_sockets) and (channel_prefs[member_idxes[i]] != -1):
+                        rcvdata, addr = channel_sockets[i].recvfrom(chunk_size * rcv_multiplier)
+                        decoded_data = np.fromstring(rcvdata, dtype=np.int16)
+                        data.append(decoded_data)
+                except socket.timeout:
+                    pass
+
+            if len(data) > 0:
+                send_data = (sum(data) // len(data)).tostring()
+                for radio_idx in member_idxes:
+                    server_socket.sendto(send_data, (MULTICAST_IP, CLIENT_PORTS[radio_idx]))
+
 
 def server_response(server_socket, channel_prefs, radio_channels, rcvdata_map, client_ports):
     """Streams back the appropriate audio response to all connected radios based on their channel memberships.
@@ -181,7 +219,7 @@ def compose_radiostream(rcvdata_map, channel_pref, radio_idx, radio_channels):
         return None
 
 
-def channel_pref_thread(subscribed_sockets, timeout=0.3, sleep=0.1):
+def channel_pref_thread(subscribed_sockets, timeout=0.3, sleep=0.3):
     """Receives channel membership preference from all radios, then switches their membership accordingly. This
     thread is also responsible for updating connection status based on UDP packet inactivity (ie. when a radio
     fails to send their channel preference within a time period defined by timeout and sleep. Channel preference data
@@ -224,8 +262,11 @@ def main():
     channel_prefs_receiving_thread = Thread(target=channel_pref_thread
                                             , args=(channelprefs_sockets,))
 
-    receiving_thread = Thread(target=receiver_thread
-                              , args=(radio_mic_sockets, server_socket, TIMEOUT, CHUNK, RCV_MULTIPLIER,))
+    # receiving_thread = Thread(target=receiver_thread
+    #                           , args=(radio_mic_sockets, server_socket, TIMEOUT, CHUNK, RCV_MULTIPLIER,))
+
+    receiving_thread = Thread(target=receiver2_thread
+                              , args=(0, radio_mic_sockets, server_socket, TIMEOUT, CHUNK, RCV_MULTIPLIER,))
 
     # nested function for handling signal interrupts. closes streams and sockets, then exits all threads gracefully
     def SIGINT_handler(*args):
