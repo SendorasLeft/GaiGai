@@ -10,7 +10,7 @@ import time
 
 # general UDP segment parameters
 CHUNK = 64
-RCV_MULTIPLIER = 1  # 2 works well on mac, 4 works better on pi
+RCV_MULTIPLIER = 2  # 2 works well on mac, 4 works better on pi
 RATE = 16000  # to be adjusted according to available sound-card
 TIMEOUT = 0.01  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
@@ -183,7 +183,7 @@ def channel_preference_thread(channel_socket, channel_multicast_group):
         try:
             data = str(channel_preference)
             channel_socket.sendto(data.encode(), channel_multicast_group)
-            #time.sleep(0.1)
+            time.sleep(0.1)
         except socket.timeout:
             pass
 
