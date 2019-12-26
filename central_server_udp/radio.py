@@ -16,9 +16,9 @@ TIMEOUT = 0.01  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
 
 MULTICAST_IP = '224.3.29.71'
-SENDER_PORT = 10100
-RECEIVER_PORT = 10200
-CHANNEL_PREF_PORT = 10300
+SENDER_PORT = 10101
+RECEIVER_PORT = 10201
+CHANNEL_PREF_PORT = 10301
 
 channel_preference = 1
 
@@ -183,7 +183,7 @@ def channel_preference_thread(channel_socket, channel_multicast_group):
         try:
             data = str(channel_preference)
             channel_socket.sendto(data.encode(), channel_multicast_group)
-            time.sleep(0.1)
+            #time.sleep(0.1)
         except socket.timeout:
             pass
 
