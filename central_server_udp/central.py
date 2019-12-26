@@ -27,7 +27,7 @@ radio_channels = {-1: {radio_idx for radio_idx in range(len(RADIO_MIC_PORTS))}
     , 0: set()
     , 1: set()
     , 2: set()}
-channel_prefs = np.array([-1, -1, -1])
+channel_prefs = np.array([-1, -1, -1, -1, -1, -1, -1])
 
 # radio
 server_multicast_group = (MULTICAST_IP, SERVER_PORT)
