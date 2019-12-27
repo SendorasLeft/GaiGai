@@ -12,7 +12,7 @@ import time
 CHUNK = 128
 RCV_MULTIPLIER = 4  # 2 works well on mac, 4 works better on pi
 RATE = 16000  # to be adjusted according to available sound-card
-TIMEOUT = 3  # receiver select-check timeout
+TIMEOUT = 1  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
 
 MULTICAST_IP = '224.3.29.71'
