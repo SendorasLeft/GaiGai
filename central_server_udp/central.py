@@ -9,8 +9,8 @@ from threading import Thread
 from collections import deque
 
 # general UDP segment parameters
-CHUNK = 128
-RCV_MULTIPLIER = 4  # 2 works well on mac, 4 works better on pi
+CHUNK = 256
+RCV_MULTIPLIER = 2  # 2 works well on mac, 4 works better on pi
 RATE = 16000  # to be adjusted according to available sound-card
 TIMEOUT = 0.01  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
@@ -27,7 +27,7 @@ CHANNEL_PORTS = [10400, 10401, 10402]
 channel_prefs = np.array([-1, -1, -1, -1, -1, -1])
 
 mic_data_buffer = [deque()] * len(RADIO_MIC_PORTS)
-MAX_BUF_LEN = 10
+MAX_BUF_LEN = 20
 
 # the -1 channel denotes disconnected radios
 radio_channels = {-1: {radio_idx for radio_idx in range(len(RADIO_MIC_PORTS))}
@@ -79,7 +79,7 @@ def subscription_multicast_setup(multicast_ip, subscription_ports):
               , "on port"
               , port)
 
-        client.setblocking(0)
+        #client.setblocking(0)
         subscribed_sockets.append(client)
 
     return subscribed_sockets

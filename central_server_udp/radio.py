@@ -9,16 +9,16 @@ import sys
 import time
 
 # general UDP segment parameters
-CHUNK = 128
-RCV_MULTIPLIER = 4  # 2 works well on mac, 4 works better on pi
+CHUNK = 256
+RCV_MULTIPLIER = 2  # 2 works well on mac, 4 works better on pi
 RATE = 16000  # to be adjusted according to available sound-card
 TIMEOUT = 0.01  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
 
 MULTICAST_IP = '224.3.29.71'
-SENDER_PORT = 10101
+SENDER_PORT = 10100
 RECEIVER_PORT = 10400 # TODO: change this after testing
-CHANNEL_PREF_PORT = 10301
+CHANNEL_PREF_PORT = 10300
 
 CHANNEL_PORTS = [10400, 10401, 10402]
 
@@ -97,7 +97,7 @@ def subscription_multicast_setup(multicast_ip, port):
           , socket.gethostbyname(socket.gethostname())
           , "on port"
           , port)
-    client.setblocking(0)
+    #client.setblocking(0)
 
     return client
 
