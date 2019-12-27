@@ -6,7 +6,11 @@ import signal
 import sys
 import time
 from threading import Thread
+from multiprocessing import Process
+from multiprocessing import Value
 from collections import deque
+
+from custom_multiprocessing import MyQueue as CustQueue
 
 # general UDP segment parameters
 CHUNK = 128
@@ -21,6 +25,9 @@ SERVER_PORT = 10000
 RADIO_MIC_PORTS = [10100, 10101] #10102, 10103]
 CLIENT_PORTS = [10200, 10201] #10202, 10203]
 CHANNEL_PREF_PORTS = [10300, 10301] #10302, 10303]
+
+MIC_BUFFER_ONE, MIC_BUFFER_TWO = CustQueue(), CustQueue()
+MIC_BUFFERS = [MIC_BUFFER_ONE, MIC_BUFFER_TWO]
 
 CHANNEL_PORTS = [10400, 10401, 10402]
 
@@ -43,6 +50,7 @@ multicast_group = MULTICAST_IP
 server_address = ('', 10000)
 
 not_shutdown = True
+not_shutdown_mp = Value('i', 1)
 
 
 def server_multicast_setup(ttl, timeout=0.1):
@@ -147,26 +155,23 @@ def receiver_thread(subscribed_sockets, server_socket, timeout, chunk_size, rcv_
         server_response(server_socket, channel_prefs, radio_channels, rcvdata_map, CLIENT_PORTS)
 
 
-def receiver_thread2(client_socket, radio_idx, timeout, chunk_size, rcv_multiplier):
-    global not_shutdown, channel_prefs
+def receiver_thread2(buf_queue, client_socket, radio_idx, timeout, chunk_size, rcv_multiplier, not_sd):
 
-    while not_shutdown:
+    while not_sd.value: # while not shutdown
         ready, _, _ = select.select([client_socket], [], [], timeout)
         try:
-            if (client_socket in ready) and (radio_channels[radio_idx] != -1):
+            if client_socket in ready:
                 rcvdata, addr = client_socket.recvfrom(chunk_size * rcv_multiplier)
-                add_to_buffer(np.fromstring(rcvdata, dtype=np.int16), radio_idx)
+                add_to_buffer(np.fromstring(rcvdata, dtype=np.int16), buf_queue, radio_idx)
         except socket.timeout:
             pass
-        #time.sleep(0.0001)
 
 
-def add_to_buffer(rcvdata, radio_idx):
-    global mic_data_buffer
+def add_to_buffer(rcvdata, buf_queue, radio_idx):
     if rcvdata is not None:
-        mic_data_buffer[radio_idx].append(rcvdata)
-        if len(mic_data_buffer) > MAX_BUF_LEN:
-            mic_data_buffer[radio_idx].popleft()
+        buf_queue.put(rcvdata)
+        if buf_queue.qsize() > MAX_BUF_LEN:
+            buf_queue.get()
 
 
 def channel_thread(channel, server_socket, mcast_group):
@@ -182,7 +187,7 @@ def channel_thread(channel, server_socket, mcast_group):
 
 
 def compose_channel_stream(channel):
-    global mic_data_buffer, radio_channels
+    global MIC_BUFFERS, radio_channels
 
     if len(radio_channels[channel]) < 1:
         return None
@@ -190,8 +195,8 @@ def compose_channel_stream(channel):
         member_ids = list(radio_channels[channel])
         data_list = []
         for radio_idx in member_ids:
-            if len(mic_data_buffer[radio_idx]) > 0:
-                data_list.append(mic_data_buffer[radio_idx].popleft())
+            if MIC_BUFFERS[radio_idx].qsize() > 0:
+                data_list.append(MIC_BUFFERS[radio_idx].get())
 
         if len(data_list) < 1:
             return None
@@ -286,8 +291,8 @@ def main():
 
     receiver_thread_list = []
     for radio_idx in range(len(radio_mic_sockets)):
-        receiving_thread = Thread(target=receiver_thread2,
-                                  args=(radio_mic_sockets[radio_idx], radio_idx, TIMEOUT, CHUNK, RCV_MULTIPLIER,))
+        receiving_thread = Process(target=receiver_thread2,
+                                   args=(MIC_BUFFERS[radio_idx], radio_mic_sockets[radio_idx], radio_idx, TIMEOUT, CHUNK, RCV_MULTIPLIER, not_shutdown_mp))
         receiver_thread_list.append(receiving_thread)
 
     channel_response_thread = Thread(target=channel_thread,
@@ -298,6 +303,7 @@ def main():
         global not_shutdown
         print(" Handling signal interrupt...")
         not_shutdown = False
+        not_shutdown_mp.value = 0
         channel_prefs_receiving_thread.join()
         #receiving_thread.join()
 
