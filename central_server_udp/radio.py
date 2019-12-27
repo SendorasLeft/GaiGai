@@ -9,8 +9,8 @@ import sys
 import time
 
 # general UDP segment parameters
-CHUNK = 128
-RCV_MULTIPLIER = 4  # 2 works well on mac, 4 works better on pi
+CHUNK = 256
+RCV_MULTIPLIER = 8  # 2 works well on mac, 4 works better on pi
 RATE = 16000  # to be adjusted according to available sound-card
 TIMEOUT = 1  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
@@ -76,8 +76,8 @@ def server_multicast_setup(ttl, timeout):
     :return: server socket
     """
     server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-    server.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
-    server.settimeout(timeout)
+    #server.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
+    #server.settimeout(timeout)
     return server
 
 
@@ -145,10 +145,11 @@ def server_thread(server_socket, stream, stream_lock, chunk_size, server_multica
             data_string = read_from_stream(stream, stream_lock, chunk_size)
             data = np.fromstring(data_string, dtype=np.int16)
             # print(data)
-            if np.max(np.absolute(data)) > 100:
+            if np.max(np.absolute(data)) > 0:
                 server_socket.sendto(data_string, server_multicast_group)
         except socket.timeout:
             pass
+        #time.sleep(0.01)
 
 
 def read_from_stream(stream, lock, chunk_size):

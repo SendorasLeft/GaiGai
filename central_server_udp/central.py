@@ -13,10 +13,10 @@ from collections import deque
 from custom_multiprocessing import MyQueue as CustQueue
 
 # general UDP segment parameters
-CHUNK = 128
+CHUNK = 256
 RCV_MULTIPLIER = 4  # 2 works well on mac, 4 works better on pi
 RATE = 16000  # to be adjusted according to available sound-card
-TIMEOUT = 1  # receiver select-check timeout
+TIMEOUT = 10  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
 
 MULTICAST_IP = '224.3.29.71'
@@ -156,20 +156,23 @@ def receiver_thread(subscribed_sockets, server_socket, timeout, chunk_size, rcv_
 
 
 def receiver_thread2(buf_queue, client_socket, radio_idx, timeout, chunk_size, rcv_multiplier, not_sd):
-
     while not_sd.value: # while not shutdown
-        ready, _, _ = select.select([client_socket], [], [], timeout)
+        rcvdata = bytearray(chunk_size * rcv_multiplier)
+        #ready, _, _ = select.select([client_socket], [], [], timeout)
         try:
-            if client_socket in ready:
-                rcvdata, addr = client_socket.recvfrom(chunk_size * rcv_multiplier)
-                add_to_buffer(np.fromstring(rcvdata, dtype=np.int16), buf_queue, radio_idx)
-        except socket.timeout:
+            #rcvdata = bytearray(chunk_size * rcv_multiplier)
+            #if client_socket in ready:
+            rcvdata, addr = client_socket.recvfrom(chunk_size * rcv_multiplier)
+            add_to_buffer(np.fromstring(rcvdata, dtype=np.int16), buf_queue, radio_idx)
+        except:
             pass
 
 
 def add_to_buffer(rcvdata, buf_queue, radio_idx):
     if rcvdata is not None:
         buf_queue.put(rcvdata)
+        #print(buf_queue.qsize())
+        #print(radio_idx)
         if buf_queue.qsize() > MAX_BUF_LEN:
             buf_queue.get()
 
@@ -197,10 +200,10 @@ def compose_channel_stream(channel):
         for radio_idx in member_ids:
             if MIC_BUFFERS[radio_idx].qsize() > 0:
                 data_list.append(MIC_BUFFERS[radio_idx].get())
-
         if len(data_list) < 1:
             return None
         else:
+            print(len(data_list))
             return sum(data_list) // len(data_list)
 
 
@@ -307,8 +310,8 @@ def main():
         channel_prefs_receiving_thread.join()
         #receiving_thread.join()
 
-        for thread in receiver_thread_list:
-            thread.join()
+        # for thread in receiver_thread_list:
+        #     thread.join()
 
         channel_response_thread.join()
 
