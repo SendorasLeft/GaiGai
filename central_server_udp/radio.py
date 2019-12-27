@@ -16,9 +16,9 @@ TIMEOUT = 0.01  # receiver select-check timeout
 TTL = struct.pack('b', 1)  # udp datagram time-to-live
 
 MULTICAST_IP = '224.3.29.71'
-SENDER_PORT = 10100
+SENDER_PORT = 10101
 RECEIVER_PORT = 10400 # TODO: change this after testing
-CHANNEL_PREF_PORT = 10300
+CHANNEL_PREF_PORT = 10301
 
 CHANNEL_PORTS = [10400, 10401, 10402]
 
@@ -143,9 +143,10 @@ def server_thread(server_socket, stream, stream_lock, chunk_size, server_multica
     while not_shutdown:  # need to set flag for power-on/power-off
         try:
             data_string = read_from_stream(stream, stream_lock, chunk_size)
-            # data = np.fromstring(data_string, dtype=np.int16)
+            data = np.fromstring(data_string, dtype=np.int16)
             # print(data)
-            server_socket.sendto(data_string, server_multicast_group)
+            if np.max(np.absolute(data)) > 100:
+                server_socket.sendto(data_string, server_multicast_group)
         except socket.timeout:
             pass
 
@@ -196,6 +197,7 @@ def play_sound(player, lock, data):
     """
     
     lock.acquire()
+    #print(np.fromstring(data, np.int16))
     player.write(data)
     lock.release()
 

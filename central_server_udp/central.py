@@ -158,6 +158,7 @@ def receiver_thread2(client_socket, radio_idx, timeout, chunk_size, rcv_multipli
                 add_to_buffer(np.fromstring(rcvdata, dtype=np.int16), radio_idx)
         except socket.timeout:
             pass
+        #time.sleep(0.0001)
 
 
 def add_to_buffer(rcvdata, radio_idx):
