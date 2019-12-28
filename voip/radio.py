@@ -98,8 +98,7 @@ class Radio:
 
     def stream_mic_segment_to_server(self):
         if not self.mic_muted:
-            data = self.get_mic_segment()
-            self.mumble_client.sound_output.add_sound(data)
+            self.mumble_client.sound_output.add_sound(self.get_mic_segment())
 
     def get_mic_segment(self):
         data = self.mic.read(self.mic_chunk, exception_on_overflow=False)
@@ -107,12 +106,14 @@ class Radio:
             return data
         else:
             decoded_data = np.fromstring(data, np.int16)
-            print(decoded_data)
-            data_48k = librosa.resample(decoded_data / 32768,
+            #print(decoded_data)
+            data_48k = librosa.resample(decoded_data,
                                         self.mic_rate,
                                         constants.AUD_DEFAULT_RATE)
-            data_48k_floor = np.floor(data_48k * 32768).astype(np.int16)
-            return data_48k_floor[0:1024].tostring()
+            #data_48k_floor = np.floor(data_48k * 32768).astype(np.int16)
+            #print(self.mic_chunk, self.mic_rate, constants.AUD_DEFAULT_RATE)
+            #print(len(data_48k))
+            return data_48k[0:1024].tostring()
 
 
 def io_setup(aud_format,
@@ -131,14 +132,14 @@ def io_setup(aud_format,
                      channels=channels,
                      rate=input_rate,
                      input=True,
-                     frames_per_buffer=input_frames_per_buffer)
+                     frames_per_buffer=input_frames_per_buffer-1)
     else:
         mic = p.open(format=aud_format,
                      channels=channels,
                      rate=input_rate,
                      input_device_index=input_id,
                      input=True,
-                     frames_per_buffer=input_frames_per_buffer)
+                     frames_per_buffer=input_frames_per_buffer-1)
 
     if output_id is None:
         player = p.open(format=aud_format,
