@@ -2,9 +2,9 @@ import sys
 
 from radio import Radio
 
-INPUT_RATE = 16000
-INPUT_ID = 2
-OUTPUT_ID = 2
+INPUT_RATE = 48000
+INPUT_ID = None
+OUTPUT_ID = None
 
 
 def main(radio_idx):
