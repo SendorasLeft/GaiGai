@@ -125,8 +125,9 @@ class Radio:
     def get_radio_count_on_server(self):
         return self.mumble_client.users.count()
 
+    # untested
     def get_radio_count_on_channel(self):
-        return self.mumble_client
+        return len(self.mumble_client.my_channel().get_users())
 
     def terminate(self):
         self.disconnect()
