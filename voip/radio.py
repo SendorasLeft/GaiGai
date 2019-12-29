@@ -2,6 +2,7 @@ import pyaudio
 import librosa
 import math
 import numpy as np
+import time
 
 import constants
 from pymumble_py3.callbacks import PYMUMBLE_CLBK_SOUNDRECEIVED
@@ -87,8 +88,9 @@ class Radio:
         if self.mumble_client is None:
             return -2  # TODO: replace with proper error code?
 
-        self.mumble_client.reset_callback(PYMUMBLE_CLBK_SOUNDRECEIVED)
         self.mumble_client.set_receive_sound(False)
+        time.sleep(0.01)
+        self.mumble_client.reset_callback(PYMUMBLE_CLBK_SOUNDRECEIVED)
         self.speaker_stream_started = False
         self.mumble_client.close()
         self.mumble_client = None
@@ -120,6 +122,18 @@ class Radio:
             # print(len(data_48k))
             return data_48k_floor[0:1024].tostring()
 
+    def get_radio_count_on_server(self):
+        return self.mumble_client.users.count()
+
+    def get_radio_count_on_channel(self):
+        return self.mumble_client
+
+    def terminate(self):
+        self.disconnect()
+        self.player.stop_stream()
+        self.mic.stop_stream()
+        self.p.terminate()
+
 
 def io_setup(aud_format,
              channels,
@@ -137,14 +151,14 @@ def io_setup(aud_format,
                      channels=channels,
                      rate=input_rate,
                      input=True,
-                     frames_per_buffer=input_frames_per_buffer-1)
+                     frames_per_buffer=input_frames_per_buffer - 1)
     else:
         mic = p.open(format=aud_format,
                      channels=channels,
                      rate=input_rate,
                      input_device_index=input_id,
                      input=True,
-                     frames_per_buffer=input_frames_per_buffer-1)
+                     frames_per_buffer=input_frames_per_buffer - 1)
 
     if output_id is None:
         player = p.open(format=aud_format,
