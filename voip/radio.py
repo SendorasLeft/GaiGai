@@ -2,6 +2,7 @@ import pyaudio
 import librosa
 import math
 import numpy as np
+import time
 
 import constants
 from pymumble_py3.callbacks import PYMUMBLE_CLBK_SOUNDRECEIVED
@@ -27,11 +28,13 @@ class Radio:
         assert (radio_idx in constants.RADIO_NAMES)
         self.user_name = constants.RADIO_NAMES[radio_idx]
         print("Radio Name:", self.user_name)
+
         self.mic_rate = input_rate
         if input_rate == constants.AUD_DEFAULT_RATE:
             self.mic_chunk = constants.CHUNK_SIZE
         else:
             self.mic_chunk = math.ceil(input_rate / constants.AUD_DEFAULT_RATE * constants.CHUNK_SIZE)
+
         self.p, self.mic, self.player = io_setup(aud_format=constants.AUD_FORMAT,
                                                  channels=constants.AUD_CHANNELS,
                                                  input_rate=input_rate,
@@ -70,6 +73,7 @@ class Radio:
                                     password=server_details.password)
         self.mumble_client.start()
         self.mumble_client.is_ready()
+        self.channel = channel
         print("Connected to server.")
 
     def start_speaker_stream(self):
@@ -81,25 +85,27 @@ class Radio:
         self.speaker_stream_started = True
 
     def disconnect(self):
-        if self.mumble_client is not None:
-            self.mumble_client.reset_callback(PYMUMBLE_CLBK_SOUNDRECEIVED)
-            self.mumble_client.set_receive_sound(False)
-            self.speaker_stream_started = False
-            self.mumble_client.close()
-            self.mumble_client = None
-            prev_channel = self.get_current_channel()
-            self.channel = -1
-            return prev_channel
-        else:
-            return -2  # TODO: replace with proper error code or exception?
+        if self.mumble_client is None:
+            return -2  # TODO: replace with proper error code?
+
+        self.mumble_client.set_receive_sound(False)
+        time.sleep(0.01)
+        self.mumble_client.reset_callback(PYMUMBLE_CLBK_SOUNDRECEIVED)
+        self.speaker_stream_started = False
+        self.mumble_client.close()
+        self.mumble_client = None
+        prev_channel = self.get_current_channel()
+        self.channel = -1
+
+        return prev_channel
 
     def play_sound(self, sender, sound_segment):
+        print(sender)
         self.player.write(sound_segment.pcm)
 
     def stream_mic_segment_to_server(self):
         if not self.mic_muted:
-            data = self.get_mic_segment()
-            self.mumble_client.sound_output.add_sound(data)
+            self.mumble_client.sound_output.add_sound(self.get_mic_segment())
 
     def get_mic_segment(self):
         data = self.mic.read(self.mic_chunk, exception_on_overflow=False)
@@ -107,12 +113,26 @@ class Radio:
             return data
         else:
             decoded_data = np.fromstring(data, np.int16)
-            print(decoded_data)
+            # print(decoded_data)
             data_48k = librosa.resample(decoded_data / 32768,
                                         self.mic_rate,
                                         constants.AUD_DEFAULT_RATE)
             data_48k_floor = np.floor(data_48k * 32768).astype(np.int16)
+            # print(self.mic_chunk, self.mic_rate, constants.AUD_DEFAULT_RATE)
+            # print(len(data_48k))
             return data_48k_floor[0:1024].tostring()
+
+    def get_radio_count_on_server(self):
+        return self.mumble_client.users.count()
+
+    def get_radio_count_on_channel(self):
+        return self.mumble_client
+
+    def terminate(self):
+        self.disconnect()
+        self.player.stop_stream()
+        self.mic.stop_stream()
+        self.p.terminate()
 
 
 def io_setup(aud_format,
@@ -131,14 +151,14 @@ def io_setup(aud_format,
                      channels=channels,
                      rate=input_rate,
                      input=True,
-                     frames_per_buffer=input_frames_per_buffer)
+                     frames_per_buffer=input_frames_per_buffer - 1)
     else:
         mic = p.open(format=aud_format,
                      channels=channels,
                      rate=input_rate,
                      input_device_index=input_id,
                      input=True,
-                     frames_per_buffer=input_frames_per_buffer)
+                     frames_per_buffer=input_frames_per_buffer - 1)
 
     if output_id is None:
         player = p.open(format=aud_format,
