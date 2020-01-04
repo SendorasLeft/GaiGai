@@ -58,21 +58,21 @@ def main(radio_idx):
     # initialize volume control
     # volume_thread = Thread(target=volume_main)
     # volume_thread.start()
-
-    channel_selection_thread = Thread(target=channel_selection)
-    channel_selection_thread.start()
+    #
+    # channel_selection_thread = Thread(target=channel_selection)
+    # channel_selection_thread.start()
 
     radio.connect(server=0)
     radio.start_speaker_stream()
 
     while True:
         radio.stream_mic_segment_to_server()
-        # lcd channel stuff
-        # clkState = GPIO.input(clk)
-        # dtState = GPIO.input(dt)
-        # channel = controlChannel(clkState, dtState, clkLastState, channel, lcd)
-        # sleep(0.1)
-        # clkLastState = clkState
+        lcd channel stuff
+        clkState = GPIO.input(clk)
+        dtState = GPIO.input(dt)
+        channel = controlChannel(clkState, dtState, clkLastState, channel, lcd)
+        sleep(0.1)
+        clkLastState = clkState
 
 
 if __name__ == "__main__":
