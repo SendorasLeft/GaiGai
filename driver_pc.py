@@ -1,10 +1,6 @@
 import sys
 
-from threading import Thread
-from multiprocessing import Process
-
 from radio import Radio
-from knob.rotary_encoder import volume_main
 
 INPUT_RATE = 48000
 INPUT_ID = None
@@ -19,10 +15,6 @@ def main(radio_idx):
                   input_rate=INPUT_RATE,
                   input_id=INPUT_ID,
                   output_id=OUTPUT_ID)
-
-    # initialize volume control
-    volume_thread = Thread(target=volume_main)
-    volume_thread.start()
 
     radio.connect(server=0)
     radio.start_speaker_stream()

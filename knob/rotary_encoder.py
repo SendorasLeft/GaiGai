@@ -75,7 +75,7 @@ def endProgram():
     GPIO.cleanup()
 
 
-def main():
+def volume_main():
     clk = 17 # 23 # 17
     dt =  18 # 24 # 18 
     mixer = alsaaudio.Mixer(alsaaudio.mixers()[0])
