@@ -12,6 +12,8 @@ RADIO_NAMES = {
     7: "RadioSeven"
 }
 
+CHANNELS = [1, 5, 3, 4]
+
 # pyaudio
 AUD_FORMAT = pyaudio.paInt16
 AUD_CHANNELS = 1
@@ -23,7 +25,7 @@ CHUNK_SIZE = 1024
 # server details TODO: define new channels
 ServerDetails = namedtuple("ServerDetails",
                            "password address port")
-CHANNELS = {
+SERVERS = {
     0: ServerDetails(password="password",
                      address="192.168.43.130",
                      port=64738),

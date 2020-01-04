@@ -16,7 +16,7 @@ def main(radio_idx):
                   input_id=INPUT_ID,
                   output_id=OUTPUT_ID)
 
-    radio.connect(channel=0)
+    radio.connect(server=0)
     radio.start_speaker_stream()
 
     while True:

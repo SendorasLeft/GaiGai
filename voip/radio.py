@@ -60,8 +60,8 @@ class Radio:
     def get_current_channel(self):
         return self.channel
 
-    def connect(self, channel):
-        if not (channel in constants.CHANNELS):
+    def connect(self, server):
+        if not (server in constants.SERVERS):
             print("Invalid Channel Specified")
             return
 
@@ -69,8 +69,8 @@ class Radio:
             print("Disconnecting from channel", self.get_current_channel())
             self.disconnect()
 
-        print("Now attempting to connect to channel", channel)
-        server_details = constants.CHANNELS[channel]
+        print("Now attempting to connect to channel", server)
+        server_details = constants.SERVERS[server]
         print(server_details)
         self.mumble_client = Mumble(host=server_details.address,
                                     user=self.user_name,
@@ -78,8 +78,25 @@ class Radio:
                                     password=server_details.password)
         self.mumble_client.start()
         self.mumble_client.is_ready()
-        self.channel = channel
+        self.change_channel(target=1)
         print("Connected to server.")
+
+    def change_channel(self, target):
+        if target >= len(constants.CHANNELS) or target < 0:
+            print("Invalid Channel:", target)
+            return self.channel
+        elif target == self.channel:
+            print("Already on Channel:", target)
+
+        try:
+            self.mumble_client.channels[constants.CHANNELS[target]].move_in()
+            self.channel = target
+            print("Successfully changed to Channel:", target)
+            return target
+        except KeyError:
+            print("Error encountered when connecting to channel")
+            return self.channel
+
 
     def start_speaker_stream(self):
         if self.mumble_client is None or self.speaker_stream_started:
