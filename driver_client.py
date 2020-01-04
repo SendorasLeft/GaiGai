@@ -2,10 +2,12 @@ import sys
 
 from threading import Thread
 from multiprocessing import Process
+from time import sleep
+from RPi import GPIO
 
 from radio import Radio
 from knob.rotary_encoder import volume_main
-from lcd.RPI_I2C_driver import RPI_I2C_driver
+import lcd.RPI_I2C_driver as RPI_I2C_driver
 from lcd.channel_display import controlChannel
 
 INPUT_RATE = 48000
@@ -35,8 +37,8 @@ def main(radio_idx):
     clkLastState = GPIO.input(clk)
 
     # initialize volume control
-    volume_thread = Thread(target=volume_main)
-    volume_thread.start()
+   #volume_thread = Thread(target=volume_main)
+    #volume_thread.start()
 
     radio.connect(server=0)
     radio.start_speaker_stream()

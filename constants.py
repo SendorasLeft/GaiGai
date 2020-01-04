@@ -12,7 +12,7 @@ RADIO_NAMES = {
     7: "RadioSeven"
 }
 
-CHANNELS = [1, 5, 3, 4]
+CHANNELS = [1, 5, 3, 4, 6]
 
 # pyaudio
 AUD_FORMAT = pyaudio.paInt16
