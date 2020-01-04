@@ -97,7 +97,6 @@ class Radio:
             print("Error encountered when connecting to channel")
             return self.channel
 
-
     def start_speaker_stream(self):
         if self.mumble_client is None or self.speaker_stream_started:
             return  # TODO: error code?
