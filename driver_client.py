@@ -67,7 +67,7 @@ def main(radio_idx):
 
     while True:
         radio.stream_mic_segment_to_server()
-        lcd channel stuff
+        #lcd channel stuff
         clkState = GPIO.input(clk)
         dtState = GPIO.input(dt)
         channel = controlChannel(clkState, dtState, clkLastState, channel, lcd)
