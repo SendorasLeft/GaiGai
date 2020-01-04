@@ -6,9 +6,12 @@ INPUT_RATE = 48000
 INPUT_ID = None
 OUTPUT_ID = None
 
+MIC_THRESHOLD = 2000
+
 
 def main(radio_idx):
     radio = Radio(int(radio_idx),
+                  mic_threshold=MIC_THRESHOLD,
                   input_rate=INPUT_RATE,
                   input_id=INPUT_ID,
                   output_id=OUTPUT_ID)

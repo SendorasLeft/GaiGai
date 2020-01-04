@@ -14,20 +14,25 @@ class Radio:
     Class representing the client radio.
     """
 
+    radio_idx = None
     user_name = None
     mic = None
     player = None
     mic_rate = None
     mic_chunk = 1024
+    mic_threshold = None
     mumble_client = None
     channel = -1
     speaker_stream_started = False
     mic_muted = False
 
-    def __init__(self, radio_idx, input_rate=48000, input_id=None, output_id=None):
+    def __init__(self, radio_idx, mic_threshold=2000, input_rate=48000, input_id=None, output_id=None):
         assert (radio_idx in constants.RADIO_NAMES)
+        self.radio_idx = radio_idx
         self.user_name = constants.RADIO_NAMES[radio_idx]
         print("Radio Name:", self.user_name)
+
+        self.mic_threshold = mic_threshold
 
         self.mic_rate = input_rate
         if input_rate == constants.AUD_DEFAULT_RATE:
@@ -100,27 +105,33 @@ class Radio:
         return prev_channel
 
     def play_sound(self, sender, sound_segment):
-        print(sender)
+        # print(sound_segment)
         self.player.write(sound_segment.pcm)
 
     def stream_mic_segment_to_server(self):
         if not self.mic_muted:
-            self.mumble_client.sound_output.add_sound(self.get_mic_segment())
+            data = self.get_mic_segment()
+            if data is not None:
+                self.mumble_client.sound_output.add_sound(data)
 
     def get_mic_segment(self):
         data = self.mic.read(self.mic_chunk, exception_on_overflow=False)
+        data_48k_decoded = None
+
         if self.mic_rate == constants.AUD_DEFAULT_RATE:
-            return data
+            data_48k_decoded = np.fromstring(data, np.int16)
         else:
             decoded_data = np.fromstring(data, np.int16)
-            # print(decoded_data)
             data_48k = librosa.resample(decoded_data / 32768,
                                         self.mic_rate,
                                         constants.AUD_DEFAULT_RATE)
-            data_48k_floor = np.floor(data_48k * 32768).astype(np.int16)
-            # print(self.mic_chunk, self.mic_rate, constants.AUD_DEFAULT_RATE)
-            # print(len(data_48k))
-            return data_48k_floor[0:1024].tostring()
+            data_48k_decoded = np.floor(data_48k * 32768).astype(np.int16)
+
+        if np.max(np.absolute(np.fromstring(data_48k_decoded, np.int16))) > self.mic_threshold:
+            print(data_48k_decoded)
+            return data_48k_decoded[0:1024].tostring()
+        else:
+            return None
 
     def get_radio_count_on_server(self):
         return self.mumble_client.users.count()
