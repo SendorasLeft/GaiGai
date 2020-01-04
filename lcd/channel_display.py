@@ -10,7 +10,7 @@ def setup(clk, dt):
 
 def getNewChannel(channel, incr):
     if incr == 1:
-        if channel < 10:
+        if channel < 5:
             return channel + 1
         else:
             return 0
@@ -18,7 +18,7 @@ def getNewChannel(channel, incr):
         if channel > 0:
             return channel - 1
         else:
-            return 10
+            return 5
 
 
 def formatString(str):
