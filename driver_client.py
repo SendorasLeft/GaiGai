@@ -16,6 +16,24 @@ OUTPUT_ID = None
 
 MIC_THRESHOLD = 2000
 
+
+channel = -1
+clkLastState = None
+clk = 17
+dt = 18
+lcd = None
+
+
+def channel_selection():
+    global channel, clkLastState, clk, dt, lcd
+    while True:
+        clkState = GPIO.input(clk)
+        dtState = GPIO.input(dt)
+        channel = controlChannel(clkState, dtState, clkLastState, channel, lcd)
+        sleep(0.1)
+        clkLastState = clkState
+
+
 def GPIOsetup(clk, dt):
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -37,8 +55,11 @@ def main(radio_idx):
     clkLastState = GPIO.input(clk)
 
     # initialize volume control
-   #volume_thread = Thread(target=volume_main)
-    #volume_thread.start()
+    # volume_thread = Thread(target=volume_main)
+    # volume_thread.start()
+
+    channel_selection_thread = Thread(target=channel_selection)
+    channel_selection_thread.start()
 
     radio.connect(server=0)
     radio.start_speaker_stream()
@@ -49,7 +70,7 @@ def main(radio_idx):
         clkState = GPIO.input(clk)
         dtState = GPIO.input(dt)
         channel = controlChannel(clkState, dtState, clkLastState, channel, lcd)
-        #sleep(0.1)
+        sleep(0.1)
         clkLastState = clkState
 
 
