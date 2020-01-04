@@ -144,7 +144,7 @@ class Radio:
             data_48k_decoded = np.floor(data_48k * 32768).astype(np.int16)
 
         if np.max(np.absolute(np.fromstring(data_48k_decoded, np.int16))) > self.mic_threshold:
-            print(data_48k_decoded)
+            #print(data_48k_decoded)
             return data_48k_decoded[0:1024].tostring()
         else:
             return None
