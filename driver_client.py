@@ -40,6 +40,7 @@ def GPIOsetup(clk, dt):
     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 def main(radio_idx):
+    global channel, clkLastState, clk, dt, lcd
     radio = Radio(int(radio_idx),
                   mic_threshold=MIC_THRESHOLD,
                   input_rate=INPUT_RATE,
