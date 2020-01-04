@@ -7,7 +7,7 @@ from RPi import GPIO
 
 from radio import Radio
 from knob.rotary_encoder import volume_main
-import lcd.RPI_I2C_driver as RPI_I2C_driver
+import RPI_I2C_driver
 from lcd.channel_display import controlChannel
 
 INPUT_RATE = 48000
