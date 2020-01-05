@@ -3,7 +3,8 @@
 # GaiGai: A Radio for the Soul
 
 Listen. Reconnect. Empower.
-#
+
+#   
 
 ## The Team
 
@@ -227,8 +228,9 @@ a fancy GUI. Here are the steps that will allow it to boot directly into the ter
 Finally, we configure the python3 script to run on startup. There are many ways to do this, but
 the simplest way is to add it to your bashrc confiuration file, since we're starting the RPi in
 headless mode anyway.
-    - `echo "sudo python3 ~/GaiGai/driver_client.py <RADIO_IDX>" >> ~/.bashrc`
-    - Note: Replace `<RADIO_IDX>` above with an integer from 0 to 5. You can add more IDs via
+
+   - `echo "sudo python3 ~/GaiGai/driver_client.py <RADIO_IDX>" >> ~/.bashrc`
+   - Note: Replace `<RADIO_IDX>` above with an integer from 0 to 5. You can add more IDs via
     the `constants.py` file.
   
 **Alternative: Run on Linux computer without hardware**
