@@ -80,8 +80,10 @@ def switchedOff():
     display(0)
     
 def muteMic():
+    i = 1
     
 def unmuteMic():
+    i = 1
 
 # def GPIOsetup(clk, dt):
 #     GPIO.setmode(GPIO.BCM)
