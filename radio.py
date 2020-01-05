@@ -111,7 +111,7 @@ class Radio:
 
         self.mumble_client.set_receive_sound(False)
         time.sleep(0.01)
-        self.mumble_client.reset_callback(PYMUMBLE_CLBK_SOUNDRECEIVED)
+        self.mumble_client.callbacks.reset_callback(PYMUMBLE_CLBK_SOUNDRECEIVED)
         self.speaker_stream_started = False
         self.mumble_client.close()
         self.mumble_client = None
