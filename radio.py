@@ -3,6 +3,7 @@ import librosa
 import math
 import numpy as np
 import time
+import pydub
 
 import constants
 from pymumble_py3.callbacks import PYMUMBLE_CLBK_SOUNDRECEIVED
@@ -101,7 +102,7 @@ class Radio:
         if self.mumble_client is None or self.speaker_stream_started:
             return  # TODO: error code?
 
-        self.mumble_client.callbacks.set_callback(PYMUMBLE_CLBK_SOUNDRECEIVED, self.play_sound)
+        #self.mumble_client.callbacks.set_callback(PYMUMBLE_CLBK_SOUNDRECEIVED, self.play_sound)
         self.mumble_client.set_receive_sound(True)
         self.speaker_stream_started = True
 
@@ -111,7 +112,7 @@ class Radio:
 
         self.mumble_client.set_receive_sound(False)
         time.sleep(0.01)
-        self.mumble_client.reset_callback(PYMUMBLE_CLBK_SOUNDRECEIVED)
+        #self.mumble_client.reset_callback(PYMUMBLE_CLBK_SOUNDRECEIVED)
         self.speaker_stream_started = False
         self.mumble_client.close()
         self.mumble_client = None
@@ -122,7 +123,35 @@ class Radio:
 
     def play_sound(self, sender, sound_segment):
         # print(sound_segment)
-        self.player.write(sound_segment.pcm)
+        self.player.write(sound_segment)
+
+    def handle_sound_queue(self):
+        users = self.get_users_on_channel()
+        incoming_pcm = []
+        for user in users:
+            if user.sound.is_sound():
+                incoming_pcm.append(user.sound.get_sound())
+
+        if len(incoming_pcm) == 0:
+            return None
+
+        print(len(incoming_pcm))
+
+        incoming_pcm.sort(key=lambda p: p.size, reverse=True)
+
+        pcm_converted = []
+        for pcm in incoming_pcm:
+            pcm_converted.append(pydub.AudioSegment(pcm.pcm,
+                                                    frame_rate=constants.AUD_DEFAULT_RATE,
+                                                    sample_width=2,
+                                                    channels=1))
+
+        composed_segment = pcm_converted[0]
+        for i in range(len(pcm_converted)):
+            if i + 1 < len(pcm_converted):
+                composed_segment = composed_segment.overlay(pcm_converted[i+1])
+        return composed_segment.raw_data
+
 
     def stream_mic_segment_to_server(self):
         if not self.mic_muted:
@@ -154,7 +183,10 @@ class Radio:
 
     # untested
     def get_radio_count_on_channel(self):
-        return len(self.mumble_client.my_channel().get_users())
+        return len(self.get_users_on_channel())
+
+    def get_users_on_channel(self):
+        return self.mumble_client.my_channel().get_users()
 
     def terminate(self):
         self.disconnect()
