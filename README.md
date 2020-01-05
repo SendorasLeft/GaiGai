@@ -57,7 +57,7 @@ tunes the user into the first available channel. The streaming is handled via an
 VoIP implementation known as [Murmur](https://github.com/mumble-voip/mumble/tree/master/src/murmur),
 and streaming is done using TCP to the client radio.
 
-In this setup guide, however, we teach you how to create your own server and radio from scratch. The
+To simplify things for this setup guide, however, we will teach you how to create your own server and radio from scratch. The
 radio will then directly connect to the server, which can be run on any suitable computing device.
 
 ## How do I make my own GaiGai Radio?
