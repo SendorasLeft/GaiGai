@@ -83,10 +83,10 @@ def switchedOff():
     display(0)
     
 def muteMic():
-    radio.muteMic()
+    radio.mute_mic()
     
 def unmuteMic():
-    radio.unmuteMic()
+    radio.unmute_mic()
 
 # def GPIOsetup(clk, dt):
 #     GPIO.setmode(GPIO.BCM)
