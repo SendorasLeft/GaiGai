@@ -104,8 +104,12 @@ def play(radio):
             return
 
 def main(radio_idx):
-    global radio    
-
+    global radio
+    radio = Radio(int(radio_idx),
+                  mic_threshold=MIC_THRESHOLD,
+                  input_rate=INPUT_RATE,
+                  input_id=INPUT_ID,
+                  output_id=OUTPUT_ID)
     # initialize volume control
     # volume_thread = Thread(target=volume_main)
     # volume_thread.start()
