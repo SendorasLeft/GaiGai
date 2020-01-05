@@ -1,8 +1,8 @@
+<img align="left" width="150" height="150" src="images/gaigailogo.png" alt="logo">
+
 # GaiGai: A Radio for the Soul
 
 Listen. Reconnect. Empower.
-
-![logo](images/gaigailogo.png)
 
 ## The Team
 
