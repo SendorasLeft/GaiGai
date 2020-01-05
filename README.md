@@ -3,10 +3,9 @@
 # GaiGai: A Radio for the Soul
 
 Listen. Reconnect. Empower.
-&NewLine;
-&NewLine;
 
-
+&nbsp;
+&nbsp;
 ## The Team
 
 Hello! We are Team GaiGai, consisting of:
