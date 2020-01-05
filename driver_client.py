@@ -29,6 +29,8 @@ VOL_PIN_B = 24
 CHNL_PIN_A = 17
 CHNL_PIN_B = 18
 
+POWER_PIN = 26
+
 radio = None
 lastUpdateTime = 0
 screen = RPI_I2C_driver.lcd()
@@ -100,7 +102,7 @@ def main(radio_idx):
     # channel_selection_thread.start()
 
     # power button
-    button = Button(26, pull_up=False) # 19
+    button = Button(POWER_PIN, pull_up=False) # 19
 
     button.when_pressed = switchedOn
     button.when_released = switchedOff
