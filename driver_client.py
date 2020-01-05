@@ -41,7 +41,7 @@ def volccw(volControlB):        # turned ccw
         # print("-1")
         changeVol(0)
 
-def chnlcw(volControlA, radio, currChnl):  # turned cw
+def chnlcw(chnlControlA, radio, currChnl):  # turned cw
     # global lastUpdateTime
     global screen
     if chnlControlA.is_pressed:
@@ -54,7 +54,7 @@ def chnlcw(volControlA, radio, currChnl):  # turned cw
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
         radio.change_channel(newChnl)
 
-def chnlccw(volControlB, radio, currChnl): # turned ccw
+def chnlccw(chnlControlB, radio, currChnl): # turned ccw
     # global lastUpdateTime
     global screen
     if chnlControlB.is_pressed:
