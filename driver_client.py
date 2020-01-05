@@ -30,12 +30,10 @@ CHNL_PIN_A = 17
 CHNL_PIN_B = 18
 
 POWER_PIN = 26
-MUTE_PIN = 19
 
 radio = None
 lastUpdateTime = 0
 screen = RPI_I2C_driver.lcd()
-radioOn = False
 
 volControlA = Button(VOL_PIN_A, pull_up=True)
 volControlB = Button(VOL_PIN_B, pull_up=True)
@@ -78,14 +76,11 @@ def chnlccw(): # turned ccw
 def switchedOn():
     print("on")
     display(1)
-    radioOn = True
 
 def switchedOff():
     print("off")
     display(0)
-    radioOn = False
-    radio.terminate()
-
+    
 def muteMic():
     radio.muteMic()
     
@@ -97,12 +92,6 @@ def unmuteMic():
 #     GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 #     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-def play(radio):
-    while True:
-        radio.stream_mic_segment_to_server()
-        if radioOn == False:
-            return
-
 def main(radio_idx):
     global radio
     radio = Radio(int(radio_idx),
@@ -110,6 +99,7 @@ def main(radio_idx):
                   input_rate=INPUT_RATE,
                   input_id=INPUT_ID,
                   output_id=OUTPUT_ID)
+
     # initialize volume control
     # volume_thread = Thread(target=volume_main)
     # volume_thread.start()
@@ -118,34 +108,28 @@ def main(radio_idx):
     # channel_selection_thread.start()
 
     # power button
-    powerButton = Button(POWER_PIN, pull_up=False)
-    # mute button
-    muteButton = Button(MUTE_PIN, pull_up=False)
+    button = Button(POWER_PIN, pull_up=False) # 19
 
-    powerButton.when_pressed = switchedOn
-    powerButton.when_released = switchedOff
-    muteButton.when_pressed = muteMic
-    muteButton.when_released = unmuteMic
+    button.when_pressed = switchedOn
+    button.when_released = switchedOff
     
-    # assign functions for change volume
+    # change channel stuff
+    # cw
     volControlB.when_pressed = volcw
+    # ccw
     volControlA.when_pressed = volccw
 
-    # assign functions for change channel
+    # cw
     chnlControlB.when_pressed = chnlcw
+    # ccw
     chnlControlA.when_pressed = chnlccw
 
     radio.connect(server=0)
     radio.start_speaker_stream()
 
     while True:
-        if radioOn:
-            radio = Radio(int(radio_idx),
-                  mic_threshold=MIC_THRESHOLD,
-                  input_rate=INPUT_RATE,
-                  input_id=INPUT_ID,
-                  output_id=OUTPUT_ID)
-            play(radio)
+        radio.stream_mic_segment_to_server()        
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
