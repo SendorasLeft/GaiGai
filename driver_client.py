@@ -68,7 +68,7 @@ def chnlcw():
         
 
 def chnlccw():
-    # global lastUpdateTime
+    global lastUpdateTime, channel
     if power == True and chnlControlB.is_pressed:
         print("-1")
         currChnl = radio.get_current_channel()
@@ -142,6 +142,7 @@ def main(radio_idx):
 
     while True:
         radio.stream_mic_segment_to_server()
+        print(radio.get_current_channel())
         if radio.get_current_channel() != channel and time() - lastUpdateTime >= 120:
             print("changing channel...")
             radio.change_channel(channel)
