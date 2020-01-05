@@ -2,7 +2,7 @@ import sys
 
 from threading import Thread
 from multiprocessing import Process
-from time import sleep
+from time import sleep, time
 from RPi import GPIO
 
 from radio import Radio
@@ -13,6 +13,7 @@ import RPI_I2C_driver
 from gpiozero import Button
 from knob.vol_control import changeVol
 from knob.channel_control import changeChannel
+from lcd.formatString import formatString
 
 INPUT_RATE = 48000
 INPUT_ID = None
@@ -27,28 +28,40 @@ VOL_PIN_B = 18
 CHNL_PIN_A = 23
 CHNL_PIN_B = 24
 
+lastUpdateTime = 0
+screen = RPI_I2C_driver.lcd()
+
 def volcw(volControlA):         # turned cw
-    if volControlA.is_pressed:  # pin B rising while A is active
+    if volControlA.is_pressed:
         # print("1")
-        return changeVol(1)
+        changeVol(1)
 
 def volccw(volControlB):        # turned ccw
-    if volControlB.is_pressed:  # pin A rising while B is active
+    if volControlB.is_pressed:
         # print("-1")
-        return changeVol(0)
+        changeVol(0)
 
-def chnlcw(volControlA, radio):  # turned cw
-    if chnlControlA.is_pressed:  # pin B rising while A is active
+def chnlcw(volControlA, radio, currChnl):  # turned cw
+    # global lastUpdateTime
+    global screen
+    if chnlControlA.is_pressed:
         # print("1")        
-        return changeChannel(1, radio)
+        newChnl = changeChannel(1, currChnl) # return channel number
+        # if (time() - lastUpdateTime >= 120): # update if 2s or longer has passed since the value stopped updating
+        #     radio.change_channel(newChnl)
+        # else:
+        #     lastUpdateTime = time()
+        screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
+        radio.change_channel(newChnl)
 
-def chnlccw(volControlB, radio): # turned ccw
-    if chnlControlB.is_pressed:  # pin A rising while B is active
-        # print("-1")       
-        return changeChannel(0, radio)
-
-# global channel
-# channel = 0
+def chnlccw(volControlB, radio, currChnl): # turned ccw
+    # global lastUpdateTime
+    global screen
+    if chnlControlB.is_pressed:
+        # print("-1")
+        newChnl = changeChannel(0, currChnl) # return channel number
+        screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
+        radio.change_channel(newChnl)
 
 # def GPIOsetup(clk, dt):
 #     GPIO.setmode(GPIO.BCM)
@@ -82,9 +95,9 @@ def main(radio_idx):
     volControlA.when_pressed = volccw(volControlB)
 
     # cw
-    chnlControlB.when_pressed = chnlcw(chnlControlA, radio)
+    chnlControlB.when_pressed = chnlcw(chnlControlA, radio, radio.get_current_channel())
     # ccw
-    chnlControlA.when_pressed = chnlccw(chnlControlB, radio)
+    chnlControlA.when_pressed = chnlccw(chnlControlB, radio, radio.get_current_channel())
 
     radio.connect(server=0)
     radio.start_speaker_stream()

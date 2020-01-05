@@ -1,5 +1,3 @@
-from ..radio import Radio
-
 def incrChannel(chnl):
     if chnl < 4:            # if chnl is less than 4, increase as usual
         return chnl + 1
@@ -13,11 +11,10 @@ def decrChannel(chnl):
         return 4
 
 # val = 1 to increase, val = 0 to decrease
-def changeChannel(val, radio):
-    currChnl = radio.get_current_channel()
+def changeChannel(val, currChnl):
     newChnl = currChnl
     if val == 1:
         newChnl = incrChannel(currChnl)
     else:
         newChnl = decrChannel(currChnl)
-    radio.change_channel(newChnl)
+    return newChnl
