@@ -61,7 +61,6 @@ def chnlcw():  # turned cw
         # else:
         #     lastUpdateTime = time()
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
-        radio.change_channel(newChnl)
 
 def chnlccw(): # turned ccw
     # global lastUpdateTime
