@@ -115,8 +115,8 @@ def main(radio_idx):
 
     powerButton.when_pressed = switchedOn
     powerButton.when_released = switchedOff
-    muteButton.when_pressed = muteMic
-    muteButton.when_released = unmuteMic
+    muteButton.when_pressed = unmuteMic
+    muteButton.when_released = muteMic
     
     # assign functions for change volume
     volControlB.when_pressed = volcw
