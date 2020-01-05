@@ -3,8 +3,8 @@
 # GaiGai: A Radio for the Soul
 
 Listen. Reconnect. Empower.
-
-<br/><br/>
+&NewLine;
+&NewLine;
 
 
 ## The Team
@@ -214,6 +214,7 @@ the written pymumble API for efficiency, which is included in this repository it
 
 Of course, we need to get the actual radio scripts for our radio. Here, we clone
 it into the home directory of the Raspberry Pi.
+
 - `cd ~`
 - `git clone https://github.com/SendorasLeft/GaiGai`
 
@@ -221,6 +222,7 @@ it into the home directory of the Raspberry Pi.
 
 Since the Raspberry Pi will run inside the radio, it does not need to boot into
 a fancy GUI. Here are the steps that will allow it to boot directly into the terminal:
+
 - `raspi-config`
 - Go to Boot Options, then select the option to boot into terminal **without** a password
 
