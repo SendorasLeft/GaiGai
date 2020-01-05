@@ -28,24 +28,30 @@ VOL_PIN_B = 24
 CHNL_PIN_A = 17
 CHNL_PIN_B = 18
 
+radio = None
 lastUpdateTime = 0
 screen = RPI_I2C_driver.lcd()
 
-def volcw(asd, volControlA):         # turned cw
+volControlA = Button(VOL_PIN_A, pull_up=True)
+volControlB = Button(VOL_PIN_B, pull_up=True)
+chnlControlA = Button(CHNL_PIN_A, pull_up=True)
+chnlControlB = Button(CHNL_PIN_B, pull_up=True)
+
+def volcw():         # turned cw
     if volControlA.is_pressed:
         # print("1")
         changeVol(1)
 
-def volccw(asd, volControlB):        # turned ccw
+def volccw():        # turned ccw
     if volControlB.is_pressed:
         # print("-1")
         changeVol(0)
 
-def chnlcw(asd, chnlControlA, radio, currChnl):  # turned cw
+def chnlcw():  # turned cw
     # global lastUpdateTime
-    global screen
     if chnlControlA.is_pressed:
-        # print("1")        
+        print("1")
+        currChnl = radio.get_current_channel()
         newChnl = changeChannel(1, currChnl) # return channel number
         # if (time() - lastUpdateTime >= 120): # update if 2s or longer has passed since the value stopped updating
         #     radio.change_channel(newChnl)
@@ -54,11 +60,11 @@ def chnlcw(asd, chnlControlA, radio, currChnl):  # turned cw
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
         radio.change_channel(newChnl)
 
-def chnlccw(asd, chnlControlB, radio, currChnl): # turned ccw
+def chnlccw(): # turned ccw
     # global lastUpdateTime
-    global screen
     if chnlControlB.is_pressed:
-        # print("-1")
+        print("-1")
+        currChnl = radio.get_current_channel()
         newChnl = changeChannel(0, currChnl) # return channel number
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
         radio.change_channel(newChnl)
@@ -69,7 +75,7 @@ def chnlccw(asd, chnlControlB, radio, currChnl): # turned ccw
 #     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 def main(radio_idx):
-    # global channel
+    global radio
     radio = Radio(int(radio_idx),
                   mic_threshold=MIC_THRESHOLD,
                   input_rate=INPUT_RATE,
@@ -84,11 +90,6 @@ def main(radio_idx):
     # channel_selection_thread.start()
 
     # change channel stuff
-    volControlA = Button(VOL_PIN_A, pull_up=True)
-    volControlB = Button(VOL_PIN_B, pull_up=True)
-    chnlControlA = Button(CHNL_PIN_A, pull_up=True)
-    chnlControlB = Button(CHNL_PIN_B, pull_up=True)
-    
     # cw
     volControlB.when_pressed = volcw(volControlB, volControlA)
     # ccw
