@@ -14,7 +14,7 @@ from gpiozero import Button
 from knob.vol_control import changeVol
 from knob.channel_control import changeChannel
 from lcd.formatString import formatString
-from lcd_start_stop import display
+from switch.lcd_start_stop import display
 
 INPUT_RATE = 48000
 INPUT_ID = None
