@@ -14,6 +14,7 @@ from gpiozero import Button
 from knob.vol_control import changeVol
 from knob.channel_control import changeChannel
 from lcd.formatString import formatString
+from lcd_start_stop import display
 
 INPUT_RATE = 48000
 INPUT_ID = None
@@ -69,6 +70,15 @@ def chnlccw(): # turned ccw
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
         radio.change_channel(newChnl)
 
+# power on off
+def switchedOn():
+    print("on")
+    display(1)
+
+def switchedOff():
+    print("off")
+    display(0)
+
 # def GPIOsetup(clk, dt):
 #     GPIO.setmode(GPIO.BCM)
 #     GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -89,6 +99,12 @@ def main(radio_idx):
     # channel_selection_thread = Thread(target=channel_selection)
     # channel_selection_thread.start()
 
+    # power button
+    button = Button(26, pull_up=False) # 19
+
+    button.when_pressed = switchedOn
+    button.when_released = switchedOff
+    
     # change channel stuff
     # cw
     volControlB.when_pressed = volcw
@@ -104,8 +120,7 @@ def main(radio_idx):
     radio.start_speaker_stream()
 
     while True:
-        radio.stream_mic_segment_to_server()
-        
+        radio.stream_mic_segment_to_server()        
 
 
 if __name__ == "__main__":
