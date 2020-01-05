@@ -78,7 +78,7 @@ class Radio:
                                     password=server_details.password)
         self.mumble_client.start()
         self.mumble_client.is_ready()
-        self.change_channel(target=1)
+        self.change_channel(target=0)
         print("Connected to server.")
 
     def change_channel(self, target):
