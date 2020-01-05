@@ -29,31 +29,34 @@ VOL_PIN_B = 24
 CHNL_PIN_A = 17
 CHNL_PIN_B = 18
 
+# switch
 POWER_PIN = 26
 MUTE_PIN = 19
 
 radio = None
 lastUpdateTime = 0
 screen = RPI_I2C_driver.lcd()
+screen.backlight(0)
+power = False # True
 
 volControlA = Button(VOL_PIN_A, pull_up=True)
 volControlB = Button(VOL_PIN_B, pull_up=True)
 chnlControlA = Button(CHNL_PIN_A, pull_up=True)
 chnlControlB = Button(CHNL_PIN_B, pull_up=True)
 
-def volcw():         # turned cw
-    if volControlA.is_pressed:
+def volcw():
+    if power == True and volControlA.is_pressed:
         # print("1")
         changeVol(1)
 
-def volccw():        # turned ccw
-    if volControlB.is_pressed:
+def volccw():
+    if power == True and volControlB.is_pressed:
         # print("-1")
         changeVol(0)
 
-def chnlcw():  # turned cw
+def chnlcw():
     # global lastUpdateTime
-    if chnlControlA.is_pressed:
+    if power == True and chnlControlA.is_pressed:
         print("1")
         currChnl = radio.get_current_channel()
         newChnl = changeChannel(1, currChnl) # return channel number
@@ -64,9 +67,9 @@ def chnlcw():  # turned cw
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
         radio.change_channel(newChnl)
 
-def chnlccw(): # turned ccw
+def chnlccw():
     # global lastUpdateTime
-    if chnlControlB.is_pressed:
+    if power == True and chnlControlB.is_pressed:
         print("-1")
         currChnl = radio.get_current_channel()
         newChnl = changeChannel(0, currChnl) # return channel number
