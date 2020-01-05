@@ -271,10 +271,9 @@ And there you have it, your own **GaiGai Radio**!
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
-We would also like to acknowledge the maintainers of the open-source VoIP server
+We would also like to acknowledge the contribution from the open-source VoIP server project 
 [Murmur / Mumble](https://github.com/mumble-voip/), as well as its corresponding [client-side
-python API](https://github.com/azlux/pymumble) started by [Robert904](https://github.com/Robert904),
-and currently being actively maintained by [azlux](https://github.com/azlux).
+python library](https://github.com/azlux/pymumble) which was started by [Robert904](https://github.com/Robert904), and actively maintained by [azlux](https://github.com/azlux) in a fork.
 
 Lastly, we would to thank NUS and the organizers of 
 [Makerthon 2020](https://blog.nus.edu.sg/makerthon2020/competition-theme/), without
