@@ -61,6 +61,7 @@ def chnlcw():  # turned cw
         # else:
         #     lastUpdateTime = time()
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
+        currChnl = newChnl
 
 def chnlccw(): # turned ccw
     # global lastUpdateTime
@@ -68,6 +69,7 @@ def chnlccw(): # turned ccw
         print("-1")
         newChnl = changeChannel(0, currChnl) # return channel number
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
+        currChnl = newChnl
 
 # power on off
 def switchedOn():
