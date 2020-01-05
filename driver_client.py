@@ -30,6 +30,7 @@ CHNL_PIN_A = 17
 CHNL_PIN_B = 18
 
 POWER_PIN = 26
+MUTE_PIN = 19
 
 radio = None
 lastUpdateTime = 0
@@ -108,20 +109,21 @@ def main(radio_idx):
     # channel_selection_thread.start()
 
     # power button
-    button = Button(POWER_PIN, pull_up=False) # 19
+    powerButton = Button(POWER_PIN, pull_up=False)
+    # mute button
+    muteButton = Button(MUTE_PIN, pull_up=False)
 
-    button.when_pressed = switchedOn
-    button.when_released = switchedOff
+    powerButton.when_pressed = switchedOn
+    powerButton.when_released = switchedOff
+    muteButton.when_pressed = muteMic
+    muteButton.when_released = unmuteMic
     
-    # change channel stuff
-    # cw
+    # assign functions for change volume
     volControlB.when_pressed = volcw
-    # ccw
     volControlA.when_pressed = volccw
 
-    # cw
+    # assign functions for change channel
     chnlControlB.when_pressed = chnlcw
-    # ccw
     chnlControlA.when_pressed = chnlccw
 
     radio.connect(server=0)
