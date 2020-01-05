@@ -1,4 +1,5 @@
-from lcd.RPI_I2C_driver import lcd
+import RPI_I2C_driver
+from time import sleep
 
 # ni hao
 LCD_NIHAO = [
@@ -11,11 +12,11 @@ LCD_NIHAO = [
 ]
 
 def powerOn(screen):
+    str = "Hello!"
     screen.lcd_clear()
     screen.backlight(1)
-    print("Hello!")
-    
-    screen.lcd_display_string(displayStr, 1)
+    print(str)
+    screen.lcd_display_string(str, 1)
     screen.lcd_load_custom_chars(LCD_NIHAO)
     screen.lcd_display_string_pos(chr(0), 1, 6)
     screen.lcd_display_string_pos(chr(1), 1, 7)
@@ -23,16 +24,18 @@ def powerOn(screen):
     screen.lcd_display_string_pos(chr(3), 1, 9)
 
 def powerOff(screen):
+    str = "Goodbye!"
     screen.lcd_clear()
-    print("Goodbye!")
-    screen.lcd_display_string(formatString(displayStr), 1)
+    print(str)
+    screen.lcd_display_string(str, 1)
     sleep(1)
+    screen.lcd_clear()
     screen.backlight(0)
 
 
 # val = 1 to say hi, val = 0 to say bye
 def display(val):
-    screen = lcd()
+    screen = RPI_I2C_driver.lcd()
     if val == 1:
         powerOn(screen)
     elif val == 0:
