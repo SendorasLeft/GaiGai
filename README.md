@@ -3,8 +3,7 @@
 # GaiGai: A Radio for the Soul
 
 Listen. Reconnect. Empower.
-
-#   
+<br/><br/>
 
 ## The Team
 
@@ -213,15 +212,15 @@ the written pymumble API for efficiency, which is included in this repository it
 
 Of course, we need to get the actual radio scripts for our radio. Here, we clone
 it into the home directory of the Raspberry Pi.
-    - `cd ~`
-    - `git clone https://github.com/SendorasLeft/GaiGai`
+- `cd ~`
+- `git clone https://github.com/SendorasLeft/GaiGai`
 
 **Headless setup:**
 
 Since the Raspberry Pi will run inside the radio, it does not need to boot into
 a fancy GUI. Here are the steps that will allow it to boot directly into the terminal:
-    - `raspi-config`
-    - Go to Boot Options, then select the option to boot into terminal **without** a password
+- `raspi-config`
+- Go to Boot Options, then select the option to boot into terminal **without** a password
 
 **Run radio script on startup:**
 
@@ -229,8 +228,8 @@ Finally, we configure the python3 script to run on startup. There are many ways 
 the simplest way is to add it to your bashrc confiuration file, since we're starting the RPi in
 headless mode anyway.
 
-   - `echo "sudo python3 ~/GaiGai/driver_client.py <RADIO_IDX>" >> ~/.bashrc`
-   - Note: Replace `<RADIO_IDX>` above with an integer from 0 to 5. You can add more IDs via
+- `echo "sudo python3 ~/GaiGai/driver_client.py <RADIO_IDX>" >> ~/.bashrc`
+- Note: Replace `<RADIO_IDX>` above with an integer from 0 to 5. You can add more IDs via
     the `constants.py` file.
   
 **Alternative: Run on Linux computer without hardware**
