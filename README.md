@@ -95,12 +95,19 @@ For the server, you will need the following:
 
 We have released the STL files that we used for 3D-printing the exterior radio casing in the 
 [GitHub repository](https://github.com/SendorasLeft/GaiGai). Do feel free to use them, or modify
-as necessary based on your chosen hardware dimensions. 
+as necessary based on your chosen hardware dimensions. These files contain CAD models for the following:
+
+- Front Casing
+- Back Casing
+- Rotary Knob Casings
 
 If a 
 3D printer is not available, you may also make them out of other materials like cardboard.
 (We do actually have a very decent alternate version of the radio
  that was made from cardboard, so we're not pulling your leg here)
+ 
+If you do choose
+ 
  
  After making the case, put your artistic skills to the test by decorating the case! 
  We personally recommend a wooden texture.
