@@ -78,12 +78,16 @@ def chnlccw():
 
 # power on off
 def switchedOn():
+    global power
     print("on")
     display(1)
+    power = True
 
 def switchedOff():
+    global power
     print("off")
     display(0)
+    power = False
     
 def muteMic():
     radio.mute_mic()
