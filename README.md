@@ -106,8 +106,6 @@ If a
 (We do actually have a very decent alternate version of the radio
  that was made from cardboard, so we're not pulling your leg here)
  
-If you do choose
- 
  
  After making the case, put your artistic skills to the test by decorating the case! 
  We personally recommend a wooden texture.
