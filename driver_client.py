@@ -91,14 +91,14 @@ def main(radio_idx):
 
     # change channel stuff
     # cw
-    volControlB.when_pressed = volcw(volControlB, volControlA)
+    volControlB.when_pressed = volcw
     # ccw
-    volControlA.when_pressed = volccw(volControlA, volControlB)
+    volControlA.when_pressed = volccw
 
     # cw
-    chnlControlB.when_pressed = chnlcw(chnlControlB, chnlControlA, radio, radio.get_current_channel())
+    chnlControlB.when_pressed = chnlcw
     # ccw
-    chnlControlA.when_pressed = chnlccw(chnlControlA, chnlControlB, radio, radio.get_current_channel())
+    chnlControlA.when_pressed = chnlccw
 
     radio.connect(server=0)
     radio.start_speaker_stream()
