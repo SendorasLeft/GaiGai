@@ -22,26 +22,26 @@ OUTPUT_ID = None
 MIC_THRESHOLD = 2000
 
 # rotary encoder
-VOL_PIN_A = 17
-VOL_PIN_B = 18
+VOL_PIN_A = 23
+VOL_PIN_B = 24
 
-CHNL_PIN_A = 23
-CHNL_PIN_B = 24
+CHNL_PIN_A = 17
+CHNL_PIN_B = 18
 
 lastUpdateTime = 0
 screen = RPI_I2C_driver.lcd()
 
-def volcw(volControlA):         # turned cw
+def volcw(asd, volControlA):         # turned cw
     if volControlA.is_pressed:
         # print("1")
         changeVol(1)
 
-def volccw(volControlB):        # turned ccw
+def volccw(asd, volControlB):        # turned ccw
     if volControlB.is_pressed:
         # print("-1")
         changeVol(0)
 
-def chnlcw(chnlControlA, radio, currChnl):  # turned cw
+def chnlcw(asd, chnlControlA, radio, currChnl):  # turned cw
     # global lastUpdateTime
     global screen
     if chnlControlA.is_pressed:
@@ -54,7 +54,7 @@ def chnlcw(chnlControlA, radio, currChnl):  # turned cw
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
         radio.change_channel(newChnl)
 
-def chnlccw(chnlControlB, radio, currChnl): # turned ccw
+def chnlccw(asd, chnlControlB, radio, currChnl): # turned ccw
     # global lastUpdateTime
     global screen
     if chnlControlB.is_pressed:
@@ -90,14 +90,14 @@ def main(radio_idx):
     chnlControlB = Button(CHNL_PIN_B, pull_up=True)
     
     # cw
-    volControlB.when_pressed = volcw(volControlA)
+    volControlB.when_pressed = volcw(volControlB, volControlA)
     # ccw
-    volControlA.when_pressed = volccw(volControlB)
+    volControlA.when_pressed = volccw(volControlA, volControlB)
 
     # cw
-    chnlControlB.when_pressed = chnlcw(chnlControlA, radio, radio.get_current_channel())
+    chnlControlB.when_pressed = chnlcw(chnlControlB, chnlControlA, radio, radio.get_current_channel())
     # ccw
-    chnlControlA.when_pressed = chnlccw(chnlControlB, radio, radio.get_current_channel())
+    chnlControlA.when_pressed = chnlccw(chnlControlA, chnlControlB, radio, radio.get_current_channel())
 
     radio.connect(server=0)
     radio.start_speaker_stream()
