@@ -143,6 +143,7 @@ def main(radio_idx):
     while True:
         radio.stream_mic_segment_to_server()
         if radio.get_current_channel() != channel and time() - lastUpdateTime >= 120:
+            print("changing channel...")
             radio.change_channel(channel)
 
 
