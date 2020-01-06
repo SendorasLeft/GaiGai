@@ -139,6 +139,7 @@ def main(radio_idx):
     radio.connect(server=0)
     radio.start_speaker_stream()
 
+    print("play poweron")
     radio.play_bilingual_notification(POWERON)
 
     while True:
