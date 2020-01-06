@@ -47,8 +47,8 @@ CH_CHNL1 = wave.open("./voice/chinese/chnl1.wav")
 CH_CHNL2 = wave.open("./voice/chinese/chnl2.wav")
 CH_CHNL3 = wave.open("./voice/chinese/chnl3.wav")
 CH_CHNL4 = wave.open("./voice/chinese/chnl4.wav")
-CH_MUTE = wave.open("./voice/chinese/mute.wav")
-CH_UNMUTE = wave.open("./voice/chinese/unmute.wav")
+CH_MUTE = wave.open("./voice/chinese/muted.wav")
+CH_UNMUTE = wave.open("./voice/chinese/unmuted.wav")
 
 EN_POWERON = wave.open("./voice/english/poweron.wav")
 EN_POWEROFF = wave.open("./voice/english/poweroff.wav")
@@ -57,8 +57,8 @@ EN_CHNL1 = wave.open("./voice/english/chnl1.wav")
 EN_CHNL2 = wave.open("./voice/english/chnl2.wav")
 EN_CHNL3 = wave.open("./voice/english/chnl3.wav")
 EN_CHNL4 = wave.open("./voice/english/chnl4.wav")
-EN_MUTE = wave.open("./voice/english/mute.wav")
-EN_UNMUTE = wave.open("./voice/english/unmute.wav")
+EN_MUTE = wave.open("./voice/english/muted.wav")
+EN_UNMUTE = wave.open("./voice/english/unmuted.wav")
 
 CHNL0 = [EN_CHNL0, CH_CHNL0]
 CHNL1 = [EN_CHNL1, CH_CHNL1]
