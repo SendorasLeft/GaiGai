@@ -40,11 +40,21 @@ channel = 0
 screen = RPI_I2C_driver.lcd()
 screen.backlight(0)
 power = False # True
+mixer = None
 
 volControlA = Button(VOL_PIN_A, pull_up=True)
 volControlB = Button(VOL_PIN_B, pull_up=True)
 chnlControlA = Button(CHNL_PIN_A, pull_up=True)
 chnlControlB = Button(CHNL_PIN_B, pull_up=True)
+
+
+def write_status():
+    global mixer
+    screen.lcd_display_string(str(radio.get_radio_count_on_channel())
+                              + " User(s) online"
+                              + "     "
+                              + "Vol:"
+                              + mixer.getVolumne()[0], 2)
 
 def volcw():
     if power == True and volControlA.is_pressed:
@@ -108,7 +118,7 @@ def unmuteMic():
 #     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 def main(radio_idx):
-    global radio
+    global radio, mixer
     radio = Radio(int(radio_idx),
                   mic_threshold=MIC_THRESHOLD,
                   input_rate=INPUT_RATE,
@@ -139,6 +149,8 @@ def main(radio_idx):
     # assign functions for change channel
     chnlControlB.when_pressed = chnlcw
     chnlControlA.when_pressed = chnlccw
+
+    mixer = changeVol(1)
 
     radio.connect(server=0)
     radio.start_speaker_stream()
