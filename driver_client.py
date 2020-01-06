@@ -82,21 +82,25 @@ def switchedOn():
     global power
     print("on")
     display(1)
+    radio.play_bilingual_notification(POWERON)
     power = True
 
 def switchedOff():
     global power
     print("off")
     display(0)
+    radio.play_bilingual_notification(POWEROFF)
     power = False
     
 def muteMic():
     if power == True:
         radio.mute_mic()
+        radio.play_bilingual_notification(MUTE)
     
 def unmuteMic():
     if power == True:
         radio.unmute_mic()
+        radio.play_bilingual_notification(UNMUTE)
 
 # def GPIOsetup(clk, dt):
 #     GPIO.setmode(GPIO.BCM)
@@ -151,6 +155,7 @@ def main(radio_idx):
         if radio.get_current_channel() != channel and time() - lastUpdateTime > 1:
             # print("changing channel...")
             radio.change_channel(channel)
+            radio.play_bilingual_notification(CHNLS[channel])
 
 
 if __name__ == "__main__":
