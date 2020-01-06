@@ -3,6 +3,9 @@ import librosa
 import math
 import numpy as np
 import time
+from copy import deepcopy
+
+from threading import Lock
 
 import constants
 from pymumble_py3.callbacks import PYMUMBLE_CLBK_SOUNDRECEIVED
@@ -25,6 +28,7 @@ class Radio:
     channel = -1
     speaker_stream_started = False
     mic_muted = False
+    notification_lock = Lock()
 
     def __init__(self, radio_idx, mic_threshold=2000, input_rate=48000, input_id=None, output_id=None):
         assert (radio_idx in constants.RADIO_NAMES)
@@ -162,7 +166,7 @@ class Radio:
         self.mic.stop_stream()
         self.p.terminate()
 
-    def play_notification(self, notification):
+    def _play_notification(self, notification):
         data = notification.readframes(constants.CHUNK_SIZE)
         while len(data) > 0:
             self.player.write(data)
@@ -170,8 +174,9 @@ class Radio:
 
     def play_bilingual_notification(self, notification_list):
         self.mumble_client.set_receive_sound(False)
-        for notification in notification_list:
-            self.play_notification(notification)
+        temp_notification_list = deepcopy(notification_list)
+        for notification in temp_notification_list:
+            self._play_notification(notification)
         self.mumble_client.set_receive_sound(True)
 
 
