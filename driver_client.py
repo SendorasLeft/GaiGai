@@ -35,6 +35,7 @@ MUTE_PIN = 19
 
 radio = None
 lastUpdateTime = 0
+channel = 0
 screen = RPI_I2C_driver.lcd()
 screen.backlight(0)
 power = False # True
@@ -55,26 +56,27 @@ def volccw():
         changeVol(0)
 
 def chnlcw():
-    # global lastUpdateTime
+    global lastUpdateTime, channel
     if power == True and chnlControlA.is_pressed:
         print("1")
         currChnl = radio.get_current_channel()
         newChnl = changeChannel(1, currChnl) # return channel number
-        # if (time() - lastUpdateTime >= 120): # update if 2s or longer has passed since the value stopped updating
-        #     radio.change_channel(newChnl)
-        # else:
-        #     lastUpdateTime = time()
+        lastUpdateTime = time()
+        channel = newChnl
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
-        radio.change_channel(newChnl)
+        # radio.change_channel(newChnl)
+        
 
 def chnlccw():
-    # global lastUpdateTime
+    global lastUpdateTime, channel
     if power == True and chnlControlB.is_pressed:
         print("-1")
         currChnl = radio.get_current_channel()
         newChnl = changeChannel(0, currChnl) # return channel number
+        lastUpdateTime = time()
+        channel = newChnl
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
-        radio.change_channel(newChnl)
+        # radio.change_channel(newChnl)
 
 # power on off
 def switchedOn():
@@ -90,10 +92,12 @@ def switchedOff():
     power = False
     
 def muteMic():
-    radio.mute_mic()
+    if power == True:
+        radio.mute_mic()
     
 def unmuteMic():
-    radio.unmute_mic()
+    if power == True:
+        radio.unmute_mic()
 
 # def GPIOsetup(clk, dt):
 #     GPIO.setmode(GPIO.BCM)
@@ -137,7 +141,14 @@ def main(radio_idx):
     radio.start_speaker_stream()
 
     while True:
-        radio.stream_mic_segment_to_server()        
+        radio.stream_mic_segment_to_server()
+        # print("curr", radio.get_current_channel())
+        # print("new", channel)
+        # print("now", time())
+        # print("last", lastUpdateTime)
+        if radio.get_current_channel() != channel and time() - lastUpdateTime > 2:
+            # print("changing channel...")
+            radio.change_channel(channel)
 
 
 if __name__ == "__main__":
