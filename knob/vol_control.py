@@ -37,6 +37,7 @@ def decrVol(mixer):
         return 0
     return vol - getVolumeChange(vol)
 
+
 # val = 1 to increase, val = 0 to decrease
 def changeVol(val):
     mixer = alsaaudio.Mixer(alsaaudio.mixers()[0])
@@ -48,4 +49,9 @@ def changeVol(val):
     mixer.setvolume(vol)
     print("volume set to", mixer.getvolume()[0])
     # str = formatString(vol) TODO
+
+
+def getVol():
+    mixer = alsaaudio.Mixer(alsaaudio.mixers()[0])
+    return mixer.getVolume()[0]
 
