@@ -162,6 +162,18 @@ class Radio:
         self.mic.stop_stream()
         self.p.terminate()
 
+    def play_notification(self, notification):
+        data = notification.readframes(constants.CHUNK_SIZE)
+        while len(data) > 0:
+            self.player.write(data)
+            data = notification.readframes(constants.CHUNK_SIZE)
+
+    def play_bilingual_notification(self, notification_list):
+        self.mumble_client.set_receive_sound(False)
+        for notification in notification_list:
+            self.play_notification(notification)
+        self.mumble_client.set_receive_sound(True)
+
 
 def io_setup(aud_format,
              channels,

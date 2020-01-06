@@ -1,4 +1,5 @@
 import pyaudio
+import wave
 from collections import namedtuple
 
 # radio_idx to username mappings
@@ -36,3 +37,38 @@ SERVERS = {
                      address="192.168.43.130",
                      port=64738)
 }
+
+CHUNK = 1024
+
+CH_POWERON = wave.open("./voice/chinese/poweron.wav")
+CH_POWEROFF = wave.open("./voice/chinese/poweroff.wav")
+CH_CHNL0 = wave.open("./voice/chinese/chnl0.wav")
+CH_CHNL1 = wave.open("./voice/chinese/chnl1.wav")
+CH_CHNL2 = wave.open("./voice/chinese/chnl2.wav")
+CH_CHNL3 = wave.open("./voice/chinese/chnl3.wav")
+CH_CHNL4 = wave.open("./voice/chinese/chnl4.wav")
+CH_MUTE = wave.open("./voice/chinese/mute.wav")
+CH_UNMUTE = wave.open("./voice/chinese/unmute.wav")
+
+EN_POWERON = wave.open("./voice/english/poweron.wav")
+EN_POWEROFF = wave.open("./voice/english/poweroff.wav")
+EN_CHNL0 = wave.open("./voice/english/chnl0.wav")
+EN_CHNL1 = wave.open("./voice/english/chnl1.wav")
+EN_CHNL2 = wave.open("./voice/english/chnl2.wav")
+EN_CHNL3 = wave.open("./voice/english/chnl3.wav")
+EN_CHNL4 = wave.open("./voice/english/chnl4.wav")
+EN_MUTE = wave.open("./voice/english/mute.wav")
+EN_UNMUTE = wave.open("./voice/english/unmute.wav")
+
+CHNL0 = [EN_CHNL0, CH_CHNL0]
+CHNL1 = [EN_CHNL1, CH_CHNL1]
+CHNL2 = [EN_CHNL2, CH_CHNL2]
+CHNL3 = [EN_CHNL3, CH_CHNL3]
+CHNL4 = [EN_CHNL4, CH_CHNL4]
+
+# BILINGUAL NOTIFICATION
+POWERON = [EN_POWERON, CH_POWERON]
+POWEROFF = [EN_POWEROFF, EN_POWEROFF]
+CHNLS = [CHNL0, CHNL1, CHNL2, CHNL3, CHNL4]
+MUTE = [EN_MUTE, CH_MUTE]
+UNMUTE = [EN_UNMUTE, CH_UNMUTE]
