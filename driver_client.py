@@ -144,7 +144,7 @@ def main(radio_idx):
         # print("new", channel)
         # print("now", time())
         # print("last", lastUpdateTime)
-        if radio.get_current_channel() != channel and time() - lastUpdateTime > 2:
+        if radio.get_current_channel() != channel and time() - lastUpdateTime > 1:
             # print("changing channel...")
             radio.change_channel(channel)
 
