@@ -53,5 +53,5 @@ def changeVol(val):
 
 def getVol():
     mixer = alsaaudio.Mixer(alsaaudio.mixers()[0])
-    return mixer.getVolume()[0]
+    return mixer.getvolume()[0]
 
