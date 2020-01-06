@@ -48,10 +48,7 @@ chnlControlB = Button(CHNL_PIN_B, pull_up=True)
 
 
 def write_status():
-    screen.lcd_display_string(str(radio.get_radio_count_on_channel())
-                              + " User(s) online"
-                              + "    "
-                              + "Vol: "
+    screen.lcd_display_string("Vol:"
                               + str(getVol()), 2)
 
 def volcw():
