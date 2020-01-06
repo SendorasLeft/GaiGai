@@ -168,6 +168,7 @@ def main(radio_idx):
             # print("changing channel...")
             radio.change_channel(channel)
             radio.play_bilingual_notification(CHNLS[channel])
+        write_status()
 
 
 if __name__ == "__main__":
