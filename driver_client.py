@@ -15,6 +15,7 @@ from knob.vol_control import changeVol
 from knob.channel_control import changeChannel
 from lcd.formatString import formatString
 from switch.lcd_start_stop import display
+from constants import *
 
 INPUT_RATE = 48000
 INPUT_ID = None
@@ -137,6 +138,8 @@ def main(radio_idx):
 
     radio.connect(server=0)
     radio.start_speaker_stream()
+
+    radio.play_bilingual_notification(POWERON)
 
     while True:
         radio.stream_mic_segment_to_server()
