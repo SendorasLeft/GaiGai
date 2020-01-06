@@ -58,7 +58,7 @@ EN_CHNL2 = "./voice/english/chnl2.wav"
 EN_CHNL3 = "./voice/english/chnl3.wav"
 EN_CHNL4 = "./voice/english/chnl4.wav"
 EN_MUTE = "./voice/english/muted.wav"
-EN_UNMUTE = wave.open("./voice/english/unmuted.wav")
+EN_UNMUTE = "./voice/english/unmuted.wav"
 
 CHNL0 = [EN_CHNL0, CH_CHNL0]
 CHNL1 = [EN_CHNL1, CH_CHNL1]
