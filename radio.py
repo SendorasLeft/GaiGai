@@ -4,6 +4,7 @@ import math
 import numpy as np
 import time
 from copy import deepcopy
+import wave
 
 from threading import Lock
 
@@ -174,8 +175,10 @@ class Radio:
 
     def play_bilingual_notification(self, notification_list):
         self.mumble_client.set_receive_sound(False)
-        temp_notification_list = deepcopy(notification_list)
-        for notification in temp_notification_list:
+        loaded_notification_list = []
+        for notification_string in notification_list:
+            loaded_notification_list.append(wave.open(notification_string))
+        for notification in loaded_notification_list:
             self._play_notification(notification)
         self.mumble_client.set_receive_sound(True)
 

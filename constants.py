@@ -40,24 +40,24 @@ SERVERS = {
 
 CHUNK = 1024
 
-CH_POWERON = wave.open("./voice/chinese/poweron.wav")
-CH_POWEROFF = wave.open("./voice/chinese/poweroff.wav")
-CH_CHNL0 = wave.open("./voice/chinese/chnl0.wav")
-CH_CHNL1 = wave.open("./voice/chinese/chnl1.wav")
-CH_CHNL2 = wave.open("./voice/chinese/chnl2.wav")
-CH_CHNL3 = wave.open("./voice/chinese/chnl3.wav")
-CH_CHNL4 = wave.open("./voice/chinese/chnl4.wav")
-CH_MUTE = wave.open("./voice/chinese/muted.wav")
-CH_UNMUTE = wave.open("./voice/chinese/unmuted.wav")
+CH_POWERON = "./voice/chinese/poweron.wav"
+CH_POWEROFF = "./voice/chinese/poweroff.wav"
+CH_CHNL0 = "./voice/chinese/chnl0.wav"
+CH_CHNL1 = "./voice/chinese/chnl1.wav"
+CH_CHNL2 = "./voice/chinese/chnl2.wav"
+CH_CHNL3 = "./voice/chinese/chnl3.wav"
+CH_CHNL4 = "./voice/chinese/chnl4.wav"
+CH_MUTE = "./voice/chinese/muted.wav"
+CH_UNMUTE = "./voice/chinese/unmuted.wav"
 
-EN_POWERON = wave.open("./voice/english/poweron.wav")
-EN_POWEROFF = wave.open("./voice/english/poweroff.wav")
-EN_CHNL0 = wave.open("./voice/english/chnl0.wav")
-EN_CHNL1 = wave.open("./voice/english/chnl1.wav")
-EN_CHNL2 = wave.open("./voice/english/chnl2.wav")
-EN_CHNL3 = wave.open("./voice/english/chnl3.wav")
-EN_CHNL4 = wave.open("./voice/english/chnl4.wav")
-EN_MUTE = wave.open("./voice/english/muted.wav")
+EN_POWERON = "./voice/english/poweron.wav"
+EN_POWEROFF = "./voice/english/poweroff.wav"
+EN_CHNL0 = "./voice/english/chnl0.wav"
+EN_CHNL1 = "./voice/english/chnl1.wav"
+EN_CHNL2 = "./voice/english/chnl2.wav"
+EN_CHNL3 = "./voice/english/chnl3.wav"
+EN_CHNL4 = "./voice/english/chnl4.wav"
+EN_MUTE = "./voice/english/muted.wav"
 EN_UNMUTE = wave.open("./voice/english/unmuted.wav")
 
 CHNL0 = [EN_CHNL0, CH_CHNL0]
