@@ -136,6 +136,7 @@ def main(radio_idx):
     # assign functions for change channel
     chnlControlB.when_pressed = chnlcw
     chnlControlA.when_pressed = chnlccw
+    sleep(1)
 
     radio.connect(server=0)
     radio.start_speaker_stream()
