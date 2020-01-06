@@ -59,8 +59,7 @@ def chnlcw():
     global lastUpdateTime, channel
     if power == True and chnlControlA.is_pressed:
         print("1")
-        currChnl = radio.get_current_channel()
-        newChnl = changeChannel(1, currChnl) # return channel number
+        newChnl = changeChannel(1, channel) # return channel number
         lastUpdateTime = time()
         channel = newChnl
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
@@ -71,8 +70,7 @@ def chnlccw():
     global lastUpdateTime, channel
     if power == True and chnlControlB.is_pressed:
         print("-1")
-        currChnl = radio.get_current_channel()
-        newChnl = changeChannel(0, currChnl) # return channel number
+        newChnl = changeChannel(0, channel) # return channel number
         lastUpdateTime = time()
         channel = newChnl
         screen.lcd_display_string(formatString("Channel " + str(newChnl)), 1)
@@ -146,7 +144,7 @@ def main(radio_idx):
         # print("new", channel)
         # print("now", time())
         # print("last", lastUpdateTime)
-        if radio.get_current_channel() != channel and time() - lastUpdateTime > 2:
+        if radio.get_current_channel() != channel and time() - lastUpdateTime > 1:
             # print("changing channel...")
             radio.change_channel(channel)
 
